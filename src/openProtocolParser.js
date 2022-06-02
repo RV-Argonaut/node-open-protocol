@@ -33,6 +33,7 @@ class OpenProtocolParser extends Transform {
         debug("new OpenProtocolParser");
     }
 
+    /** @param {Buffer} chunk */
     _transform(chunk, encoding, cb) {
         debug("OpenProtocolParser _transform", chunk);
 
@@ -54,6 +55,7 @@ class OpenProtocolParser extends Transform {
             let obj = {};
             let startPtr = ptr;
 
+            /** @type {number|string} */
             let length = chunk.toString(encodingOP, ptr, ptr + 4);
 
             length = Number(length);
@@ -95,7 +97,8 @@ class OpenProtocolParser extends Transform {
             }
 
             ptr += 4;
-
+            
+            /** @type {number|string} */
             let revision = chunk.toString(encodingOP, ptr, ptr + 3);
 
             if (revision === "   ") {
@@ -119,6 +122,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 3;
 
+            /** @type {number|string} */
             let noAck = chunk.toString(encodingOP, ptr, ptr + 1);
 
             if (noAck === " ") {
@@ -137,6 +141,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 1;
 
+            /** @type {number|string} */
             let stationID = chunk.toString(encodingOP, ptr, ptr + 2);
 
             if (stationID === "  ") {
@@ -157,6 +162,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 2;
 
+            /** @type {number|string} */
             let spindleID = chunk.toString(encodingOP, ptr, ptr + 2);
 
             if (spindleID === "  ") {

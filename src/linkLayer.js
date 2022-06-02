@@ -31,7 +31,7 @@ class LinkLayer extends Duplex {
      * @param {number} opts.timeOut
      * @param {number} opts.retryTimes
      * @param {boolean} opts.rawData
-     * @param {boolean} opts.disableMidParsing
+     * @param {Record<number, boolean>} opts.disableMidParsing
      */
     constructor(opts) {
         debug("new LinkLayer", opts);
@@ -193,6 +193,7 @@ class LinkLayer extends Duplex {
         this.opParser.write(data);
     }
 
+    /** @param {import('./openProtocolParser').OpenProtocolParserChunk} data */
     _onDataOpParser(data) {
         debug("LinkLayer _onDataOpParser", data);
         
