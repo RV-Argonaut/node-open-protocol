@@ -4,99 +4,65 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 
+const helpers = require("../helpers.js");
+
+const rev1 = /** @type {const} */ ({
+    mid: 38,
+    revision: 1,
+    params: [
+        { key: 1, keyl: null, type: 'num', len: 2, name: 'jobID' },
+    ],
+});
+
+const rev2 = /** @type {const} */ ({
+    mid: 38,
+    revision: 2,
+    params: [
+        { key: 1, keyl: null, type: 'num', len: 4, name: 'jobID' },
+    ],
+});
+
 /**
- * @class
- * @name MID0038
- * @param {object} MID0038
- * @param {number} MID0038.jobID
+ * @template MRS
+ * @typedef {import('../mid').MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
  */
 
-const helpers = require("../helpers.js");
-const processParser = helpers.processParser;
-const serializerField = helpers.serializerField;
+/**
+ * @typedef {MidTypeFromStruct<typeof rev1>} MID0038_r1
+ * @typedef {MidTypeFromStruct<typeof rev2>} MID0038_r2
+ * @typedef {MID0038_r1 | MID0038_r2} MID0038
+ */
 
-function parser(msg, opts, cb) {
+const revisions = /** @type {import("../helpers.js").DeepWriteable<[rev1, rev2]>} */ ([ rev1, rev2 ]);
 
-    let buffer = msg.payload;
-    msg.payload = {};
-
-    let position = {
-        value: 0
-    };
-
-    msg.revision = msg.revision || 1;
-
-    switch (msg.revision) {
-
-        case 2:
-            processParser(msg, buffer, "jobID", "number", 4, position, cb) &&
-                cb(null, msg);
-            break;
-
-        case 1:
-            processParser(msg, buffer, "jobID", "number", 2, position, cb) &&
-                cb(null, msg);
-            break;
-
-        default:
-            cb(new Error(`[Parser MID${msg.mid}] invalid revision [${msg.revision}]`));
-            break;
+/**
+ * @param {import('../mid').EncodedMID} msg 
+ * @param {any} opts
+ * @param {(err: Error | null, msg?: MID0038) => void} cb 
+ */
+ function parser(msg, opts, cb) {
+    let result, err = null;
+    try {
+        result = helpers.parse(msg, revisions);
+    } catch (_err) {
+        err = _err;
     }
+    cb(err, result);
 }
 
-function serializer(msg, opts, cb) {
-
-    let buf;
-    let statusprocess = false;
-
-    let position = {
-        value: 0
-    };
-
-    msg.revision = msg.revision || 1;
-
-    switch (msg.revision) {
-
-        case 2:
-
-            buf = Buffer.alloc(4);
-
-            position.value = 4;
-
-            statusprocess = serializerField(msg, buf, "jobID", "number", 4, position, cb);
-
-            if (!statusprocess) {
-                return;
-            }
-
-            msg.payload = buf;
-
-            cb(null, msg);
-
-            break;
-
-        case 1:
-
-            buf = Buffer.alloc(2);
-
-            position.value = 2;
-
-            statusprocess = serializerField(msg, buf, "jobID", "number", 2, position, cb);
-
-            if (!statusprocess) {
-                return;
-            }
-
-            msg.payload = buf;
-
-            cb(null, msg);
-
-            break;
-
-        default:
-            cb(new Error(`[Serializer MID${msg.mid}] invalid revision [${msg.revision}]`));
-            break;
+/**
+ * @param {MID0038} msg 
+ * @param {any} opts 
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
+ */
+ function serializer(msg, opts, cb) {
+    let result, err = null;
+    try {
+        result = { ...msg, payload: helpers.serialize(msg, revisions) };
+    } catch (_err) {
+        err = _err;
     }
+    cb(err, result);
 }
 
 function revision() {
