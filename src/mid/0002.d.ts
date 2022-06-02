@@ -38,7 +38,7 @@ interface MID0002_r6 extends MID0002_r5 {
 
 interface MID0002_base<PAYLOAD, REV extends number> extends MID<PAYLOAD, REV> {
   mid: 2;
-  noAck: false;
+  noAck: true;
   payload: PAYLOAD;
 }
 
