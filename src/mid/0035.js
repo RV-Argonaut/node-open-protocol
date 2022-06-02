@@ -4,110 +4,111 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 const helpers = require("../helpers.js");
-const processParser = helpers.processParser;
-const processKey = helpers.processKey;
 
-const rev1Keys = [
-    ['jobID', 'number', 2],
-    ['jobStatus', 'number', 1],
-    ['jobBatchMode', 'number', 1],
-    ['jobBatchSize', 'number', 4],
-    ['jobBatchCounter', 'number', 4],
-    ['timeStamp', 'string', 19]
-];
+const rev1 = /** @type {const} */ ({
+    mid: 35,
+    revision: 1,
+    params: [
+        { key: 1, type: 'num', len: 2, name: 'jobID' },
+        { key: 2, type: 'num', len: 1, name: 'jobStatus' },
+        { key: 3, type: 'num', len: 1, name: 'jobBatchMode' },
+        { key: 4, type: 'num', len: 4, name: 'jobBatchSize' },
+        { key: 5, type: 'num', len: 4, name: 'jobBatchCounter' },
+        { key: 6, type: 'str', len: 19, name: 'timeStamp' }
+    ],
+});
 
-const rev2Keys = [
-    ['jobID', 'number', 4],
-    ['jobStatus', 'number', 1],
-    ['jobBatchMode', 'number', 1],
-    ['jobBatchSize', 'number', 4],
-    ['jobBatchCounter', 'number', 4],
-    ['timeStamp', 'string', 19]
-];
+const rev2 = /** @type {const} */ ({
+    mid: 35,
+    revision: 2,
+    params: [
+        { key: 1, type: 'num', len: 4, name: 'jobID' },
+        { key: 2, type: 'num', len: 1, name: 'jobStatus' },
+        { key: 3, type: 'num', len: 1, name: 'jobBatchMode' },
+        { key: 4, type: 'num', len: 4, name: 'jobBatchSize' },
+        { key: 5, type: 'num', len: 4, name: 'jobBatchCounter' },
+        { key: 6, type: 'str', len: 19, name: 'timeStamp' }
+    ],
+});
 
-const rev3Keys = [
-    ['jobID', 'number', 4],
-    ['jobStatus', 'number', 1],
-    ['jobBatchMode', 'number', 1],
-    ['jobBatchSize', 'number', 4],
-    ['jobBatchCounter', 'number', 4],
-    ['timeStamp', 'string', 19],
-    ['jobCurrentStep', 'number', 3],
-    ['jobTotalSteps', 'number', 3],
-    ['jobStepType', 'number', 2]
-];
+const rev3 = /** @type {const} */ ({
+    mid: 35,
+    revision: 3,
+    params: [
+        ...rev2.params,
+        { key: 7, type: 'num', len: 3, name: 'jobCurrentStep' },
+        { key: 8, type: 'num', len: 3, name: 'jobTotalSteps' },
+        { key: 9, type: 'num', len: 2, name: 'jobStepType' },
+    ],
+});
 
-const rev4Keys = [
-    ['jobID', 'number', 4],
-    ['jobStatus', 'number', 1],
-    ['jobBatchMode', 'number', 1],
-    ['jobBatchSize', 'number', 4],
-    ['jobBatchCounter', 'number', 4],
-    ['timeStamp', 'string', 19],
-    ['jobCurrentStep', 'number', 3],
-    ['jobTotalSteps', 'number', 3],
-    ['jobStepType', 'number', 2],
-    ['jobTighteningStatus', 'number', 2]
-];
+const rev4 = /** @type {const} */ ({
+    mid: 35,
+    revision: 4,
+    params: [
+        ...rev3.params,
+        { key: 10, type: 'num', len: 2, name: 'jobTighteningStatus' },
+    ],
+});
 
-const rev5Keys = [
-    ['jobID', 'number', 4],
-    ['jobStatus', 'number', 1],
-    ['jobBatchMode', 'number', 1],
-    ['jobBatchSize', 'number', 4],
-    ['jobBatchCounter', 'number', 4],
-    ['timeStamp', 'string', 19],
-    ['jobCurrentStep', 'number', 3],
-    ['jobTotalSteps', 'number', 3],
-    ['jobStepType', 'number', 2],
-    ['jobTighteningStatus', 'number', 2],
-    ['jobSequenceNumber', 'number', 5],
-    ['numberVIN', 'string', 25],
-    ['identifierPart2', 'string', 25],
-    ['identifierPart3', 'string', 25],
-    ['identifierPart4', 'string', 25]
-];
+const rev5 = /** @type {const} */ ({
+    mid: 35,
+    revision: 5,
+    params: [
+        ...rev4.params,
+        { key: 11, type: 'num', len: 5, name: 'jobSequenceNumber' },
+        { key: 12, type: 'str', len: 25, name: 'numberVIN' },
+        { key: 13, type: 'str', len: 25, name: 'identifierPart2' },
+        { key: 14, type: 'str', len: 25, name: 'identifierPart3' },
+        { key: 15, type: 'str', len: 25, name: 'identifierPart4' }
+    ],
+});
 
-const revisionKeys = [rev1Keys, rev2Keys, rev3Keys, rev4Keys, rev5Keys];
+/**
+ * @template MRS
+ * @typedef {import('../mid').MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
+ */
 
-function parser(msg, opts, cb) {
-    let buffer = msg.payload;
-    msg.payload = {};
+/**
+ * @typedef {MidTypeFromStruct<typeof rev1>} MID0035_r1
+ * @typedef {MidTypeFromStruct<typeof rev2>} MID0035_r2
+ * @typedef {MidTypeFromStruct<typeof rev3>} MID0035_r3
+ * @typedef {MidTypeFromStruct<typeof rev4>} MID0035_r4
+ * @typedef {MidTypeFromStruct<typeof rev5>} MID0035_r5
+ * @typedef {MID0035_r1 | MID0035_r2 | MID0035_r3 | MID0035_r4 | MID0035_r5} MID0035
+ */
 
-    let status = true;
+const revisions = /** @type {import("../helpers.js").DeepWriteable<[rev1, rev2, rev3, rev4, rev5]>} */ ([ rev1, rev2, rev3, rev4, rev5 ]);
 
-    let position = {
-        value: 0
-    };
-
-    let revision = msg.revision || 1;
-
-    const keys = revisionKeys[revision - 1];
-
-    if (!keys){
-        cb(new Error(`[Parser MID${msg.mid}] invalid revision [${msg.revision}]`));
-        return;
+/**
+ * @param {import('../mid').EncodedMID} msg 
+ * @param {any} opts
+ * @param {(err: Error | null, msg?: MID0035) => void} cb 
+ */
+ function parser(msg, opts, cb) {
+    let result, err = null;
+    try {
+        result = helpers.parse(msg, revisions);
+    } catch (_err) {
+        err = _err;
     }
-
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        status =
-            status &&
-            processKey(msg, buffer, key[0], i + 1, 2, position, cb) &&
-            processParser(msg, buffer, key[0], key[1], key[2], position, cb);
-    }
-
-    if (status) {
-        cb(null, msg);
-    }
+    cb(err, result);
 }
 
-function serializer(msg, opts, cb) {
-    cb(new Error(`[Serializer MID${msg.mid}] still not implemented`));
 
-    //let buf = Buffer.from("");
-    //msg.payload = buf;
-    //cb(null, msg);
+/**
+ * @param {MID0035} msg 
+ * @param {any} opts 
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
+ */
+ function serializer(msg, opts, cb) {
+    let result, err = null;
+    try {
+        result = { ...msg, payload: helpers.serialize(msg, revisions) };
+    } catch (_err) {
+        err = _err;
+    }
+    cb(err, result);
 }
 
 function revision() {
