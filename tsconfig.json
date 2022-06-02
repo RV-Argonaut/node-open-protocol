@@ -103,6 +103,7 @@
   "include": [
     "index.js",
     "src/mid.ts",
+    "src/openProtocolParser.js",
     "src/helpers.js",
     "src/mid/0002.js",
     "src/mid/0004.js",

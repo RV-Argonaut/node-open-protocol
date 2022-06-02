@@ -9,7 +9,7 @@ const { Transform } = require('stream');
 
 const constants = require("./constants");
 
-const encodingOP = constants.defaultEncoder;
+const encodingOP = /** @type {BufferEncoding} */ (constants.defaultEncoder);
 
 var debug = util.debuglog('open-protocol');
 
@@ -19,7 +19,7 @@ class OpenProtocolParser extends Transform {
      * @class OpenProtocolParser
      * @description This class performs the parsing of the MID header.
      * This transforms MID (Buffer) in MID (Object).
-     * @param {Object} opts an object with the option passed to the constructor
+     * @param {import('stream').TransformOptions & { rawData?: boolean }} opts an object with the option passed to the constructor
      */
     constructor(opts) {
         opts = opts || {};
@@ -33,7 +33,11 @@ class OpenProtocolParser extends Transform {
         debug("new OpenProtocolParser");
     }
 
-    /** @param {Buffer} chunk */
+    /**
+     * @param {Buffer} chunk
+     * @param {BufferEncoding} encoding
+     * @param {(err?: Error) => void} cb
+     */
     _transform(chunk, encoding, cb) {
         debug("OpenProtocolParser _transform", chunk);
 
@@ -52,6 +56,7 @@ class OpenProtocolParser extends Transform {
 
         while (ptr < chunk.length) {
 
+            /** @type {any} */
             let obj = {};
             let startPtr = ptr;
 
@@ -62,7 +67,7 @@ class OpenProtocolParser extends Transform {
 
             if (isNaN(length) || length < 1 || length > 9999) {
 
-                let e = new Error(`Invalid length [${length}]`);
+                let e = /** @type {Error & {errno:number}} */ (new Error(`Invalid length [${length}]`));
                 e.errno = constants.ERROR_LINKLAYER.INVALID_LENGTH;
 
                 cb(e);
@@ -78,7 +83,7 @@ class OpenProtocolParser extends Transform {
             }
 
             if (chunk[ptr + length] !== 0) {
-                let e = new Error(`Invalid message [${chunk.toString()}]`);
+                let e = /** @type {Error & {errno:number}} */ (new Error(`Invalid message [${chunk.toString()}]`));
                 e.errno = constants.ERROR_LINKLAYER.INVALID_LENGTH;
                 cb(e);
                 debug("OpenProtocolParser _transform err-message:", ptr, chunk);
@@ -108,7 +113,7 @@ class OpenProtocolParser extends Transform {
             obj.revision = Number(revision);
 
             if (isNaN(obj.revision) || obj.revision < 0 || obj.revision > 999) {
-                let e = new Error(`Invalid revision [${revision}]`);
+                let e = /** @type {Error & {errno:number, obj:any}} */ (new Error(`Invalid revision [${revision}]`));
                 e.errno = constants.ERROR_LINKLAYER.INVALID_REVISION;
                 e.obj = obj;
                 cb(e);
@@ -183,6 +188,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 2;
 
+            /** @type {string | number} */
             let sequenceNumber = chunk.toString(encodingOP, ptr, ptr + 2);
 
             if (sequenceNumber === "  ") {
@@ -199,6 +205,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 2;
 
+            /** @type {string|number} */
             let messageParts = chunk.toString(encodingOP, ptr, ptr + 1);
 
             if (messageParts === " ") {
@@ -215,6 +222,7 @@ class OpenProtocolParser extends Transform {
 
             ptr += 1;
 
+            /** @type {string|number} */
             let messageNumber = chunk.toString(encodingOP, ptr, ptr + 1);
 
             if (messageNumber === " ") {
