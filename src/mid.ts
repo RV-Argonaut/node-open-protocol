@@ -1,3 +1,4 @@
+import { DeepWriteable } from "./helpers";
 
 /** generic type for a MID, which has an unknown payload (payload type to be extended by other MIDs) */
 export type MID = {
@@ -24,7 +25,7 @@ export interface EncodedMID extends MID {
 
 export type MidStructParam = {
     name: string;
-    type: 'num' | 'str' | 'rawStr';
+    type: any;
     /**
      * param data length, or name of the (already parsed) param that indicates the param data length
      * if null, then it spans to the remainder of the payload or is calculated after parsing.
@@ -70,11 +71,11 @@ export type MidTypeFromStruct<MRS> = MRS extends {
 
 /** converts a struct param to a parsed mid param */
 type MidParamTypeFromStruct<MSF extends MidStructParam | MidStructRepeatedParam> =
-	MSF extends MidStructParam ?
+	MSF extends { type: any } ?
         MSF['type'] extends 'num' ? number
         : MSF['type'] extends 'str' | 'rawStr' ? string
+        : MSF['type'] extends (readonly any[]) ? MSF['type'][number][]
         : MSF['type'] // get type directly
-	: MSF extends MidStructRepeatedParam ? {
-		-readonly [ repeatedParam in MSF['params'][number]['name'] ]: MidParamTypeFromStruct<Extract<MSF['params'][number], repeatedParam>>;
-	}[] : never;
-
+    : DeepWriteable<MSF> extends MidStructRepeatedParam ? {
+        [ repeatedParam in DeepWriteable<MSF>['params'][number]['name'] ]: MidParamTypeFromStruct<Extract<DeepWriteable<MSF>['params'][number], repeatedParam>>;
+    }[] : never;

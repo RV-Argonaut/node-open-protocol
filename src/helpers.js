@@ -467,6 +467,257 @@ function processResolutionFields(message, buffer, parameter, count, position, cb
  * @typedef {import('./mid').MidTypeFromStruct<REV>} MidTypeFromStruct<REV>
  */
 
+/**
+ * @param {(import("./mid").MidStructParam | import("./mid").MidStructRepeatedParam)[]} structs
+ * @returns {(import("./mid").MidStructParam | import("./mid").MidStructRepeatedParam)[]}
+ */
+function sortStructs (structs) {
+    return structs.sort((a, b) => {
+        if (a.key === null || b.key === null) {
+            return 0;
+        }
+        return a.key < b.key ? -1 : 1;
+    });
+}
+
+/**
+ * @param {EncodedMID} msg original encoded message
+ * @param {Record<string, any>} payload the obj to build and mutate
+ * @param {number} startPos
+ * @param {(import("./mid").MidStructParam | import("./mid").MidStructRepeatedParam)[]} structs
+ * @returns {number} how much the parsing moved
+ */
+function parseParams (msg, payload, startPos, structs) {
+    let position = startPos;
+
+    for (const struct of sortStructs(structs)) {
+        // if the key is null, the param is computed and we can skip it
+        if (struct.key !== null) {
+
+            // does this param get repeated?
+            if ('repeatParam' in struct) {
+                payload[struct.name] = [];
+    
+                /** how many times this param is repeated */
+                const numRepeats = payload[struct.repeatParam];
+                if (numRepeats === undefined) {
+                    throw new Error(`repeated param "${struct.name}" depends on param "${struct.repeatParam}", but it cannot be found.`);
+                }
+    
+                // parse each of the repeated items
+                for (let i = 0; i < numRepeats; i++) {
+                    /** @type {Record<string, any>} */
+                    const repeatedItem = {};
+    
+                    // parse each param of the repeated item
+                    try {
+                        position += parseParams(msg, repeatedItem, position, struct.params);
+                    } catch (err) {
+                        throw new Error(`failed to parse a "${struct.name}": ${(/** @type {Error} */ (err)).name}`);
+                    }
+    
+                    // add the repeated item to the repeated param
+                    payload[struct.name].push(repeatedItem);
+                }
+            } else {
+                // this is a non repeating param
+                
+                // should we check for a param key?
+                if (struct.keyl !== null) {
+                    const keyl = struct.keyl || 2; // default key length is 2
+                    const receiver = Number(msg.payload.toString(encoding, position, position + keyl));
+                    if (receiver !== struct.key) {
+                        throw new Error(`invalid key, mid: ${msg.mid}, parameter: ${struct.name}, expect: ${struct.key}, receiver: ${receiver} payload: ${JSON.stringify(payload)}`);
+                    }
+        
+                    position += keyl;
+                }
+        
+                // if the len is null, then we should parse this param as a string from current position to the end of the buffer
+                if (struct.len === null) {
+                    payload[struct.name] = msg.payload.toString(encoding, position);
+                    position = msg.payload.byteLength; // we parsed until the end of the buffer
+        
+                    // measure how much we moved, even though this probably won't be used if we parse the whole buffer
+                    return position - startPos;
+                }
+        
+                /** @type {number} */
+                let len;
+    
+                // special case: len is the name of another param whose value is the length of the data
+                if (typeof struct.len === 'string') {
+        
+                    // verify param exists
+                    if (typeof payload[struct.len] !== 'number') {
+                        throw new Error(`length of param "${struct.name}" depends on param "${struct.len}", but it cannot be found. (mid: ${msg.mid})`);
+                    }
+        
+                    len = payload[struct.len];
+                } else {
+                    // normal case
+                    len = struct.len;
+                }
+    
+                if (struct.type === "str") {
+                    payload[struct.name] = msg.payload.toString(encoding, position, position + len).trim();
+                } else if (struct.type === 'rawStr') {
+                    payload[struct.name] = msg.payload.toString(encoding, position, position + len);
+                    if (payload[struct.name].length !== len) {
+                        new Error(`invalid length, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${payload}`)
+                    }
+                } else if (struct.type === 'num') {
+                    payload[struct.name] = Number(msg.payload.toString(encoding, position, position + len));
+                    if (isNaN(payload[struct.name])) {
+                        new Error(`invalid value, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${JSON.stringify(payload)}`)
+                    }
+                }
+        
+                position += len;
+            }
+        }
+    }
+    
+    return position - startPos;
+}
+
+
+/**
+ * @template T
+ * @typedef {{ -readonly [P in keyof T]: DeepWriteable<T[P]> }} DeepWriteable<T>;
+ */
+
+/**
+ * @template {import('./mid').MidStructBase[]} REVS
+ * @param {EncodedMID} msg
+ * @param {REVS} revisions
+ * @returns {MidTypeFromStruct<REVS[number]>}
+ */
+function parse (msg, revisions) {
+    const rev = revisions.find(r => r.revision === msg.revision);
+    if (!rev) {
+        throw new Error(`[Parser MID${msg.mid}] invalid revision [${msg.revision}]`)
+    }
+
+    const payload = {};
+    try {
+        parseParams(msg, payload, 0, rev.params);
+    } catch (err) {
+        throw new Error(`[Parser MID${msg.mid}] ${(/** @type {Error} */ (err)).message}`)
+    }
+
+    return (/** @type {MidTypeFromStruct<REVS[number]>} */ ({
+        ...msg,
+        payload,
+    }));
+}
+
+/**
+ * @param {Record<string, any>} payload the mid payload in object form
+ * @param {(import("./mid").MidStructParam | import("./mid").MidStructRepeatedParam)[]} structs
+ * @returns {string} the serialized payload
+ */
+function serializeParams (payload, structs) {
+    let result = '';
+    for (const struct of sortStructs(structs)) {
+        if (struct.key === null) {
+            // this param is computed
+            continue;
+        }
+
+        // does this param get repeated?
+        if ('repeatParam' in struct) {
+            const repeatCount = payload[struct.repeatParam];
+            if (repeatCount === undefined) {
+                throw new Error(`length of param "${struct.name}" depends on param "${struct.repeatParam}", but it cannot be found in the payload.`)
+            }
+            if (payload[struct.repeatParam] !== payload[struct.name].length) {
+                throw new Error(`invalid length for "${struct.name}", "${struct.repeatParam}" is ${repeatCount}`)
+            }
+
+            for (const repeatItem of payload[struct.name]) {
+                try {
+                    result += serializeParams(repeatItem, struct.params);
+                } catch (err) {
+                    throw new Error(`failed to serialize a "${struct.name}": ${(/** @type {Error} */ (err)).message}`);
+                }
+            }
+        } else {
+            // this is a non-repeating param
+
+            // should we add a param key?
+            if (struct.keyl !== null ) {
+                const keyl = struct.keyl || 2; // default key length is 2
+                const keyStr = padLeft(struct.key, keyl);
+                if (keyStr.length !== keyl) {
+                    throw new Error(`unexpected length of key "${struct.key}" in param "${struct.name}". expected a length of ${keyl}`);
+                }
+                result += keyStr;
+            }
+
+            if (struct.len === null) {
+                // special case: serialize the entire param as the last param to be serialized
+                result += String(payload[struct.name]);
+                return result;
+            }
+
+            /** @type {number} */
+            let len;
+
+            if (typeof struct.len === 'string') {
+                // special case: len is the name of another param whose value sets the length
+
+                // verify param exists
+                if (typeof payload[struct.len] !== 'number') {
+                    throw new Error(`length of param "${struct.name}" depends on param "${struct.len}", but it cannot be found.`);
+                }
+    
+                len = payload[struct.len];
+            } else {
+                // normal case
+                len = struct.len;
+            }
+
+            const val = payload[struct.name];
+            /** @type {string} */
+            let valStr;
+            if (struct.type === 'num') {
+                if (isNaN(val)) {
+                    throw new Error(`param "${struct.name}" value type is invalid (isNaN: ${val}). `)
+                }
+                valStr = padLeft(val, len, 10, '0');
+            } else {
+                // string types
+                valStr = padRight(val, len, 10, ' ');
+            }
+            if (valStr.length !== len) {
+                throw new Error(`unexpected length of param "${struct.name}": "${valStr}". Expected a length of ${len}`);
+            }
+            result += valStr;
+        }
+    }
+    return result;
+}
+
+/**
+ * @template {import('./mid').MidStructBase[]} REVS
+ * @param {MidTypeFromStruct<REVS[number]>} msg
+ * @param {REVS} revisions
+ * @returns {Buffer}
+ */
+function serialize (msg, revisions) {
+    const rev = revisions.find(r => r.revision === msg.revision);
+    if (!rev) {
+        throw new Error(`[Serializer MID${msg.mid}] invalid revision [${msg.revision}]`);
+    }
+
+    try {
+        return Buffer.from(serializeParams(msg.payload, rev.params), encoding);
+    } catch (err) {
+        throw new Error(`[Serializing MID${msg.mid}]: ${(/** @type {Error} */ (err)).message}`);
+    }
+}
+
 module.exports = {
     getMids,
     testNul,
@@ -477,5 +728,7 @@ module.exports = {
     processDataFields,
     processResolutionFields: processResolutionFields,
     serializerField,
-    serializerKey
+    serializerKey,
+    parse,
+    serialize,
 };
