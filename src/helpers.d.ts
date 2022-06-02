@@ -1,9 +1,6 @@
-import { OpenProtocolParserChunk } from "./openProtocolParser";
+import { EncodedMID } from "./openProtocolParser";
 
-// export function getMids (): {
-//     [ mid in ]
-// };
 export function getMids (): Record<number, {
-    parser (msg: OpenProtocolParserChunk, opts: unknown, cb: () => void)
+    parser (msg: EncodedMID, opts: unknown, cb: () => void)
 }>;
 

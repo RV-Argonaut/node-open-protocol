@@ -214,7 +214,7 @@ function processParser(message, buffer, parameter, parameterType, parameterLengt
  * The [cb] function is called in cases of error, sending the error as parameter.
  *
  * @param {object} object 
- * @param {buffer} buffer 
+ * @param {Buffer} buffer 
  * @param {string} parameter 
  * @param {number} key 
  * @param {number} keyLength 
