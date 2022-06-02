@@ -4,9 +4,10 @@ export interface OpenProtocolParserOpts extends TransformOptions {
     rawData?: boolean;
 };
 
-export type MID<PAYLOAD, REV extends number = number> = {
+/** generic type for a MID, which has an unknown payload (payload type to be extended by other MIDs) */
+export type MID = {
     mid: number;
-    revision: REV;
+    revision: number;
     noAck: boolean;
     /** @default 1 */
     stationID: number;
@@ -18,7 +19,7 @@ export type MID<PAYLOAD, REV extends number = number> = {
     messageParts: number;
     /** @default 0 */
     messageNumber: number;
-    payload: PAYLOAD;
+    payload: unknown;
     _raw?: Buffer;
 }
 

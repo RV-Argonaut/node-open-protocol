@@ -1,5 +1,6 @@
 import { MID } from "../openProtocolParser";
 
-export interface MID0001 extends MID<{}, 1> {
+export interface MID0001 extends MID {
     mid: 1;
+    revision: 1;
 }

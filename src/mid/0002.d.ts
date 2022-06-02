@@ -36,8 +36,9 @@ interface MID0002_r6 extends MID0002_r5 {
   clientID: number;
 }
 
-interface MID0002_base<PAYLOAD, REV extends number> extends MID<PAYLOAD, REV> {
+interface MID0002_base<PAYLOAD, REV extends number> extends MID {
   mid: 2;
+  revision: REV;
   noAck: true;
   payload: PAYLOAD;
 }
