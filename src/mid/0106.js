@@ -7,36 +7,55 @@ const helpers = require("../helpers.js");
 const processParser = helpers.processParser;
 const processKey = helpers.processKey;
 
-// keys are the same for revisions 1,2,3
-const revKeys = [
-    ["totalNoOfMessages", "number", 2],
-    ["messageNumber", "number", 2],
-    ["dataNoSystem", "number", 10],
-    ["stationNo", "number", 2],
-    ["stationName", "string", 20],
-    ["time", "string", 19],
-    ["modeNo", "number", 2],
-    ["modeName", "string", 20],
-    ["simpleStatus", "number", 1],
-    ["pmStatus", "number", 1],
-    ["wpId", "string", 40],
-    ["numberOfBolts", "number", 2]
-];
+const rev1 = /** @type {const} */ ({
+    mid: 106,
+    revision: 1,
+    fields: {
+        totalNoOfMessages: { key: 1, type: 'num', len: 2 },
+        messageNumber: { key: 2, type: 'num', len: 2 },
+        dataNoSystem: { key: 3, type: 'num', len: 10 },
+        stationNo: { key: 4, type: 'num', len: 2 },
+        stationName: { key: 5, type: 'str', len: 20 },
+        time: { key: 6, type: 'str', len: 19 },
+        modeNo: { key: 7, type: 'num', len: 2 },
+        modeName: { key: 8, type: 'str', len: 20 },
+        simpleStatus: { key: 9, type: 'num', len: 1 },
+        pmStatus: { key: 10, type: 'num', len: 1 },
+        wpId: { key: 11, type: 'str', len: 40 },
+        numberOfBolts: { key: 12, type: 'num', len: 2 },
+        
+        /** these repeat for each numberOfBolts, starting at parameter number 13 */
+        bolts: {
+            key: 13,
+            repeatField: 'numberOfBolts',
+            fields: {
+                ordinalBoltNumber: { key: 1, type: 'num', len: 2 },
+                simpleBoltStatus: { key: 2, type: 'num', len: 1 },
+                torqueStatus: { key: 3, type: 'num', len: 1 },
+                angleStatus: { key: 4, type: 'num', len: 1 },
+                boltT: { key: 5, type: 'num', len: 7 },
+                boltA: { key: 6, type: 'num', len: 7 },
+                boltTHighLimit: { key: 7, type: 'num', len: 7 },
+                boltTLowLimit: { key: 8, type: 'num', len: 7 },
+                boltAHighLimit: { key: 9, type: 'num', len: 7 },
+                boltALowLimit: { key: 10, type: 'num', len: 7 }
+            },
+        }
+    },
+});
 
-// these repeat for each numberOfBolts, starting at parameter number 13
-const boltKeys = [
-    ["ordinalBoltNumber", "number", 2],
-    ["simpleBoltStatus", "number", 1],
-    ["torqueStatus", "number", 1],
-    ["angleStatus", "number", 1],
-    ["boltT", "number", 7],
-    ["boltA", "number", 7],
-    ["boltTHighLimit", "number", 7],
-    ["boltTLowLimit", "number", 7],
-    ["boltAHighLimit", "number", 7],
-    ["boltALowLimit", "number", 7]
-];
+const rev2 = /** @type {const} */ ({ ...rev1, revision: 2 });
+const rev3 = /** @type {const} */ ({ ...rev1, revision: 3 });
 
+/**
+ * @typedef {import("../helpers").MidTypeFromStruct<typeof rev1 | typeof rev2 | typeof rev3>} MID0106
+ */
+
+/**
+ * @param {import('../helpers').EncodedMID} msg
+ * @param {any} opts
+ * @param {(err: Error | null, msg?: MID0106) => void} cb
+ */
 function parser(msg, opts, cb) {
     let buffer = msg.payload;
     msg.payload = {};
@@ -119,8 +138,36 @@ function parser(msg, opts, cb) {
     }
 }
 
+/**
+ * @param {MID0106} msg 
+ * @param {any} opts 
+ * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ */
 function serializer(msg, opts, cb) {
-    let buf = Buffer.from("");
+    let buf;
+    let statusprocess = false;
+
+    let position = {
+        value: 0,
+    };
+
+    msg.revision = msg.revision || 1;
+
+    switch (msg.revision) {
+        case 1:
+        case 2:
+        case 3:
+            position.value = 121; // standard size without bolts or special values
+            position.value += 47 * msg.payload.bolts.length; // additional bytes per bolt
+            position.value += msg.payload.specialValues.reduce((prev, sv) => {
+                return 
+            }, 0); // additional bytes per special value
+            break;
+        default:
+            cb(new Error(`[Serializer MID${msg.mid}] invalid revision [${msg.revision}]`));
+            break;
+    }
+    
     msg.payload = buf;
     cb(null, msg);
 }

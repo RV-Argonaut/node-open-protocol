@@ -4,34 +4,95 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 
-/**
- * @name MID0002
- * @class
- * @param {object} MID0002 
- * @param {number} MID0002.cellID
- * @param {number} MID0002.channelID
- * @param {string} MID0002.controllerName
- * @param {string} MID0002.supplierCode
- * @param {string} MID0002.openProtocolVersion
- * @param {string} MID0002.controllerSoftwareVersion
- * @param {string} MID0002.toolSoftwareVersion
- * @param {string} MID0002.rbuType
- * @param {string} MID0002.controllerSerialNumber
- * @param {number} MID0002.systemType
- * @param {number} MID0002.systemSubtype
- * @param {number} MID0002.sequenceNumberSupport
- * @param {number} MID0002.linkingHandlingSupport
- * @param {string} MID0002.stationID
- * @param {string} MID0002.stationName
- * @param {number} MID0002.clientID
- */
-
 const helpers = require("../helpers.js");
 const processParser = helpers.processParser;
 const processKey = helpers.processKey;
 const serializerField = helpers.serializerField;
 const serializerKey = helpers.serializerKey;
 
+const rev1 = /** @type {const} */ ({
+  mid: 2,
+  revision: 1,
+  fields: [
+    { key: 1, type: 'num', len: 4, name: 'cellID' },
+    { key: 2, type: 'num', len: 2, name: 'channelID' },
+    { key: 3, type: 'str', len: 25, name: 'controllerName' },
+  ],
+});
+
+const rev2 = /** @type {const} */ ({
+  mid: 2,
+  revision: 2,
+  fields: [
+    ...rev1.fields,
+    { key: 4, type: 'str', len: 3, name: 'supplierCode' },
+  ],
+});
+
+const rev3 = /** @type {const} */ ({
+  mid: 2,
+  revision: 3,
+  fields: [
+    ...rev2.fields,
+    { key: 5, type: 'str', len: 19, name: 'openProtocolVersion' },
+    { key: 6, type: 'str', len: 19, name: 'controllerSoftwareVersion' },
+    { key: 7, type: 'str', len: 19, name: 'toolSoftwareVersion' }
+  ],
+});
+
+const rev4 = /** @type {const} */ ({
+  mid: 2,
+  revision: 4,
+  fields: [
+    ...rev3.fields,
+    { key: 8, type: 'str', len: 24, name: 'rbuType' },
+    { key: 9, type: 'str', len: 10, name: 'controllerSerialNumber' }
+  ],
+});
+
+const rev5 = /** @type {const} */ ({
+  mid: 2,
+  revision: 5,
+  fields: [
+    ...rev4.fields,
+    { key: 10, type: 'num', len: 3, name: 'systemType' },
+    { key: 11, type: 'num', len: 3, name: 'systemSubtype' }
+  ],
+});
+
+const rev6 = /** @type {const} */ ({
+  mid: 2,
+  revision: 6,
+  fields: [
+    ...rev5.fields,
+    { key: 12, type: "num", len: 1, name: 'sequenceNumberSupport' },
+    { key: 13, type: "num", len: 1, name: 'linkingHandlingSupport' },
+    { key: 14, type: "num", len: 10, name: 'stationID' },
+    { key: 15, type: "str", len: 25, name: 'stationName' },
+    { key: 16, type: "num", len: 1, name: 'clientID' },
+  ],
+});
+
+/**
+ * @template MRS
+ * @typedef {import("../helpers").MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
+ */
+
+/**
+ * @typedef {MidTypeFromStruct<typeof rev1>} MID0002_r1
+ * @typedef {MidTypeFromStruct<typeof rev2>} MID0002_r2
+ * @typedef {MidTypeFromStruct<typeof rev3>} MID0002_r3
+ * @typedef {MidTypeFromStruct<typeof rev4>} MID0002_r4
+ * @typedef {MidTypeFromStruct<typeof rev5>} MID0002_r5
+ * @typedef {MidTypeFromStruct<typeof rev6>} MID0002_r6
+ * @typedef {MID0002_r1 | MID0002_r2 | MID0002_r3 | MID0002_r4 | MID0002_r5 | MID0002_r6} MID0002
+ */
+
+/**
+ * @param {import('../helpers').EncodedMID} msg 
+ * @param {any} opts
+ * @param {(err: Error | null, msg?: MID0002) => void} cb 
+ */
 function parser(msg, opts, cb) {
 
     let buffer = msg.payload;
@@ -168,6 +229,11 @@ function parser(msg, opts, cb) {
     }
 }
 
+/**
+ * @param {MID0002} msg 
+ * @param {any} opts 
+ * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ */
 function serializer(msg, opts, cb) {
 
     let buf;

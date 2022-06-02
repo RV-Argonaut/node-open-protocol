@@ -4,18 +4,28 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 
-/**
- * @name MID0004
- * @class
- * @param {object} MID0004 
- * @param {number} MID0004.midNumber
- * @param {number} MID0004.errorCode
- */
-
 const helpers = require("../helpers.js");
 const processParser = helpers.processParser;
 const serializerField = helpers.serializerField;
 
+const rev1 = /** @type {const} */ ({
+    mid: 4,
+    revision: 1,
+    fields: [
+        { key: 1, type: 'num', len: 2, keyl: null, name: 'errorCode' },
+        { key: 2, type: 'num', len: 4, keyl: null, name: 'midNumber' },
+    ],
+});
+
+/**
+ * @typedef {import("../helpers").MidTypeFromStruct<rev1>} MID0004
+ */
+
+/**
+ * @param {import('../helpers').EncodedMID} msg
+ * @param {any} opts
+ * @param {(err: Error | null, msg?: MID0004) => void} cb
+ */
 function parser(msg, opts, cb) {
 
     let buffer = msg.payload;
@@ -40,6 +50,11 @@ function parser(msg, opts, cb) {
     }
 }
 
+/**
+ * @param {MID0004} msg 
+ * @param {any} opts 
+ * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ */
 function serializer(msg, opts, cb) {
 
     let buf;
