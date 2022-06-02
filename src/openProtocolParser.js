@@ -251,10 +251,6 @@ class OpenProtocolParser extends Transform {
         }
         cb();
     }
-
-    _destroy() {
-        //no-op, needed to handle older node versions
-    }
 }
 
 module.exports = OpenProtocolParser;
