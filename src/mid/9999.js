@@ -7,33 +7,30 @@
 const rev1 = /** @type {const} */ ({
     mid: 9999,
     revision: 1,
-    fields: [],
+    params: [],
 });
 
 /**
- * @typedef {import("../helpers").MidTypeFromStruct<rev1>} MID9999
+ * @typedef {import('../mid').MidTypeFromStruct<typeof rev1>} MID9999
  */
 
 /**
- * @param {import('../helpers').EncodedMID} msg
+ * @param {import('../mid').EncodedMID} msg
  * @param {any} opts
  * @param {(err: Error | null, msg?: MID9999) => void} cb
  */
 function parser(msg, opts, cb) {
     let buffer = msg.payload;
-    msg.payload = buffer.toString("ascii");
-    cb(null, msg);
+    cb(null, /** @type {MID9999} */ ({ ...msg, payload: buffer.toString("ascii") }));
 }
 
 /**
  * @param {MID9999} msg 
  * @param {any} opts
- * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
  */
 function serializer(msg, opts, cb) {
-    let buf = Buffer.from("");
-    msg.payload = buf;
-    cb(null, msg);
+    cb(null, { ...msg, payload: Buffer.from('')});
 }
 
 function revision() {

@@ -9,13 +9,23 @@ const path = require("path");
 const codes = require('./constants');
 const encoding = codes.defaultEncoder;
 
+/**
+ * @typedef {import('./mid').MID} MID
+ */
+
+/**
+ * @type {Array<{
+ *  parser: (msg: EncodedMID, opts: unknown, cb: (err: Error | null, msg?: MID) => void) => void;
+ *  serializer: (msg: MID, opts: unknown, cb: (err: Error | null, msg?: EncodedMID) => void) => void;
+ * }>}
+ */
 let midList;
 
 /**
  * @description Converts a string or a number to a string with a determined @param size length.
  * @param {number|String} n the element to be padded
  * @param {number} size the desired length of the string
- * @param {number} base the base used to convert @param n to a string when it's a number
+ * @param {number} [base=10] the base used to convert @param n to a string when it's a number
  * @param {String} [elm='0'] the character used to fill the empty positions
  * @param {boolean} [trimLeft=false] whether we should remove the left side of the string if it's bigger than the size
  * @returns {String}
@@ -43,7 +53,6 @@ function padRight(n, size, base, elm, trimLeft) {
 
 /**
  * @description This method returns all implemented MIDs. The implemented MIDs must be saved in "/node-open-protocol/src/mid".
- * @returns {Array}
  */
 function getMids() {
 
@@ -76,12 +85,12 @@ function getMids() {
  * The [cb] function is called in cases of an error, sending the error as parameter.
  * The return of this function is a boolean, true: the process without errors or false: the process with an error.
  *
- * @param {object} message 
- * @param {buffer} buffer 
+ * @param {any} message 
+ * @param {Buffer} buffer 
  * @param {string} parameter 
  * @param {string} type 
  * @param {number} length 
- * @param {object} position 
+ * @param {{ value: number }} position 
  * @param {Function} cb 
  * @returns {boolean}
  */
@@ -130,11 +139,11 @@ function serializerField(message, buffer, parameter, type, length, position, cb)
  * The [cb] function is called in cases of error, sending the error as parameter.
  * The return of this function is boolean, true: the process without errors or false: the process with an error.
  *
- * @param {object} message 
- * @param {buffer} buffer 
+ * @param {any} message 
+ * @param {Buffer} buffer 
  * @param {number} key 
  * @param {number} length 
- * @param {object} position 
+ * @param {{ value: number }} position 
  * @param {Function} cb 
  * @returns {boolean}
  */
@@ -160,12 +169,12 @@ function serializerKey(message, buffer, key, length, position, cb) {
  * The [cb] function is called in cases of error, sending the error as parameter.
  * The return of this function is boolean, true: the process without errors or false: the process with an error.
  *
- * @param {object} message Object in use for update
- * @param {buffer} buffer Buffer with content for extracting information
+ * @param {any} message Object in use for update
+ * @param {Buffer} buffer Buffer with content for extracting information
  * @param {string} parameter Name of parameter extracted
  * @param {string} parameterType Type of information extracted "string" | "rawString" | "number"  
  * @param {number} parameterLength Size of information extracted
- * @param {object} position Position on buffer this information {value: position}
+ * @param {{ value: number }} position Position on buffer this information {value: position}
  * @param {Function} cb
  * @returns {boolean} status process
  */
@@ -213,12 +222,12 @@ function processParser(message, buffer, parameter, parameterType, parameterLengt
  * The return of this function is boolean, true: the value extracted is equal [key] or false: case not.
  * The [cb] function is called in cases of error, sending the error as parameter.
  *
- * @param {object} object 
+ * @param {any} object 
  * @param {Buffer} buffer 
  * @param {string} parameter 
  * @param {number} key 
  * @param {number} keyLength 
- * @param {number} keyPosition 
+ * @param {{ value: number }} keyPosition 
  * @param {Function} cb 
  * @returns {boolean}
  */
@@ -244,10 +253,10 @@ function processKey(object, buffer, parameter, key, keyLength, keyPosition, cb) 
  *
  * The [cb] function is called in cases of error, sending the error as parameter.
  *
- * @param {object} object
- * @param {buffer} buffer
+ * @param {any} object
+ * @param {Buffer} buffer
  * @param {string} parameter
- * @param {object} position
+ * @param {{ value: number }} position
  * @param {Function} cb
  * @returns {boolean}
  */
@@ -272,11 +281,11 @@ function testNul(object, buffer, parameter, position, cb) {
  * 
  * @see Specification OpenProtocol_Specification_R_2_8_0_9836 4415 01.pdf Page 34
  * 
- * @param {object} message 
- * @param {buffer} buffer 
+ * @param {any} message 
+ * @param {Buffer} buffer 
  * @param {string} parameter 
  * @param {number} count 
- * @param {object} position 
+ * @param {{ value: number }} position 
  * @param {Function} cb 
  * @returns {boolean}
  */
@@ -299,7 +308,7 @@ function processDataFields(message, buffer, parameter, count, position, cb) {
                 return false;
             }
             dataFields.parameterID = parameterID;
-            dataFields.parameterName = codes.PID[parameterID] || "";
+            dataFields.parameterName = (/** @type {Record<string, string>} */ (codes.PID))[parameterID] || "";
             position.value += 5;
 
             let length = Number(buffer.toString(encoding, position.value, position.value + 3));
@@ -327,7 +336,7 @@ function processDataFields(message, buffer, parameter, count, position, cb) {
                 return false;
             }
             dataFields.unit = unit;
-            dataFields.unitName = codes.UNIT[unit] || "";
+            dataFields.unitName = (/** @type {Record<string, string>} */ (codes.UNIT))[unit] || "";
             position.value += 3;
 
             let stepNumber = Number(buffer.toString(encoding, position.value, position.value + 4));
@@ -365,11 +374,11 @@ function processDataFields(message, buffer, parameter, count, position, cb) {
  *
  * @see Specification OpenProtocol_Specification_R_2_8_0_9836 4415 01.pdf Page 260
  * 
- * @param {object} message 
- * @param {buffer} buffer 
+ * @param {any} message 
+ * @param {Buffer} buffer 
  * @param {string} parameter 
  * @param {number} count 
- * @param {object} position 
+ * @param {{ value: number }} position 
  * @param {function} cb 
  * @returns {boolean}
  */
@@ -428,7 +437,7 @@ function processResolutionFields(message, buffer, parameter, count, position, cb
                 return false;
             }
             resolutionFields.unit = unit;
-            resolutionFields.unitName = codes.UNIT[unit] || "";
+            resolutionFields.unitName = (/** @type {Record<string, string>} */ (codes.UNIT))[unit] || "";
             position.value += 3;
 
             let timeValue = buffer.toString(encoding, position.value, position.value + length).trim();
@@ -447,6 +456,16 @@ function processResolutionFields(message, buffer, parameter, count, position, cb
     }
     return true;
 }
+
+/**
+ * @typedef {import('./mid').EncodedMID} EncodedMID
+ * @typedef {import('./mid').MidStructBase} MidStructBase
+ */
+
+/**
+ * @template REV
+ * @typedef {import('./mid').MidTypeFromStruct<REV>} MidTypeFromStruct<REV>
+ */
 
 module.exports = {
     getMids,

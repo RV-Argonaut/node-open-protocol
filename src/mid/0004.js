@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 /*
   Copyright: (c) 2018-2020, Smart-Tech Controle e Automação
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -11,18 +11,18 @@ const serializerField = helpers.serializerField;
 const rev1 = /** @type {const} */ ({
     mid: 4,
     revision: 1,
-    fields: [
+    params: [
         { key: 1, type: 'num', len: 2, keyl: null, name: 'errorCode' },
         { key: 2, type: 'num', len: 4, keyl: null, name: 'midNumber' },
     ],
 });
 
 /**
- * @typedef {import("../helpers").MidTypeFromStruct<rev1>} MID0004
+ * @typedef {import('../mid').MidTypeFromStruct<rev1>} MID0004
  */
 
 /**
- * @param {import('../helpers').EncodedMID} msg
+ * @param {import('../mid').EncodedMID} msg
  * @param {any} opts
  * @param {(err: Error | null, msg?: MID0004) => void} cb
  */
@@ -53,7 +53,7 @@ function parser(msg, opts, cb) {
 /**
  * @param {MID0004} msg 
  * @param {any} opts 
- * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
  */
 function serializer(msg, opts, cb) {
 

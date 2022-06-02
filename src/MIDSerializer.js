@@ -20,7 +20,7 @@ class MIDSerializer extends Transform {
      * This transforms MID.payload (object) in MID.payload (Buffer).
      * This class uses the implemented MIDs in 'node-open-protocol/src/mid' for serializing MIDs.
      * In case of not a implemented MID, MID.payload (String | Buffer) is converted in a Buffer.
-     * @param opts parameters to Transform stream
+     * @param {any} opts parameters to Transform stream
      */
     constructor(opts) {
         debug("new MIDSerializer");
@@ -31,6 +31,13 @@ class MIDSerializer extends Transform {
         super(opts);
     }
 
+    /**
+     * 
+     * @param {import('./mid').MID} chunk 
+     * @param {BufferEncoding} encoding 
+     * @param {(err?: Error) => void} cb 
+     * @returns 
+     */
     _transform(chunk, encoding, cb) {
         debug("MIDSerializer _transform", chunk);
 

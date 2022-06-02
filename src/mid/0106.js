@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 /*
   Copyright: (c) 2018-2020, Smart-Tech Controle e Automação
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -10,7 +10,7 @@ const processKey = helpers.processKey;
 const rev1 = /** @type {const} */ ({
     mid: 106,
     revision: 1,
-    fields: {
+    params: {
         totalNoOfMessages: { key: 1, type: 'num', len: 2 },
         messageNumber: { key: 2, type: 'num', len: 2 },
         dataNoSystem: { key: 3, type: 'num', len: 10 },
@@ -28,7 +28,7 @@ const rev1 = /** @type {const} */ ({
         bolts: {
             key: 13,
             repeatField: 'numberOfBolts',
-            fields: {
+            params: {
                 ordinalBoltNumber: { key: 1, type: 'num', len: 2 },
                 simpleBoltStatus: { key: 2, type: 'num', len: 1 },
                 torqueStatus: { key: 3, type: 'num', len: 1 },
@@ -48,7 +48,7 @@ const rev2 = /** @type {const} */ ({ ...rev1, revision: 2 });
 const rev3 = /** @type {const} */ ({ ...rev1, revision: 3 });
 
 /**
- * @typedef {import("../helpers").MidTypeFromStruct<typeof rev1 | typeof rev2 | typeof rev3>} MID0106
+ * @typedef {import('../mid').MidTypeFromStruct<typeof rev1 | typeof rev2 | typeof rev3>} MID0106
  */
 
 /**

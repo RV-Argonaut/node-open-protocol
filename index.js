@@ -17,11 +17,19 @@ const midrequest = require("./src/midRequest");
 
 const net = require("net");
 
+/**
+ * 
+ * @param {number} port 
+ * @param {string} host 
+ * @param {Partial<import("./src/sessionControlClient.js").SessionControlOpts>} [opts]
+ * @param {(controllerData: import("./src/mid/0002.js").MID0002) => void} [connectionListener] 
+ * @returns 
+ */
 function createClient(port, host, opts, connectionListener) {
 
     if (connectionListener === undefined) {
         if (typeof opts === "function") {
-            connectionListener = opts;
+            connectionListener = /** @type {(controllerData: import("./src/mid/0002.js").MID0002) => void} */ (opts);
             opts = {};
         } else {
             connectionListener = () => {
@@ -41,7 +49,7 @@ function createClient(port, host, opts, connectionListener) {
     socket.once("timeout", () => onTimeout());
 
     function onTimeout() {
-        let e = new Error("Socket Timeout");
+        let e = /** @type {Error & { code: String, address: String, port: number }} */ (new Error("Socket Timeout"));
         e.code = "SOCKET_TIMEOUT";
         e.address = host;
         e.port = port;
@@ -50,7 +58,7 @@ function createClient(port, host, opts, connectionListener) {
 
     opts.stream = socket;
 
-    let client = new SessionControlClient(opts);
+    let client = new SessionControlClient(/** @type {import("./src/sessionControlClient.js").SessionControlOpts} */(opts));
 
     return client;
 }

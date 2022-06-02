@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 /*
   Copyright: (c) 2018-2020, Smart-Tech Controle e Automação
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -13,7 +13,7 @@ const serializerKey = helpers.serializerKey;
 const rev1 = /** @type {const} */ ({
   mid: 2,
   revision: 1,
-  fields: [
+  params: [
     { key: 1, type: 'num', len: 4, name: 'cellID' },
     { key: 2, type: 'num', len: 2, name: 'channelID' },
     { key: 3, type: 'str', len: 25, name: 'controllerName' },
@@ -23,8 +23,8 @@ const rev1 = /** @type {const} */ ({
 const rev2 = /** @type {const} */ ({
   mid: 2,
   revision: 2,
-  fields: [
-    ...rev1.fields,
+  params: [
+    ...rev1.params,
     { key: 4, type: 'str', len: 3, name: 'supplierCode' },
   ],
 });
@@ -32,8 +32,8 @@ const rev2 = /** @type {const} */ ({
 const rev3 = /** @type {const} */ ({
   mid: 2,
   revision: 3,
-  fields: [
-    ...rev2.fields,
+  params: [
+    ...rev2.params,
     { key: 5, type: 'str', len: 19, name: 'openProtocolVersion' },
     { key: 6, type: 'str', len: 19, name: 'controllerSoftwareVersion' },
     { key: 7, type: 'str', len: 19, name: 'toolSoftwareVersion' }
@@ -43,8 +43,8 @@ const rev3 = /** @type {const} */ ({
 const rev4 = /** @type {const} */ ({
   mid: 2,
   revision: 4,
-  fields: [
-    ...rev3.fields,
+  params: [
+    ...rev3.params,
     { key: 8, type: 'str', len: 24, name: 'rbuType' },
     { key: 9, type: 'str', len: 10, name: 'controllerSerialNumber' }
   ],
@@ -53,8 +53,8 @@ const rev4 = /** @type {const} */ ({
 const rev5 = /** @type {const} */ ({
   mid: 2,
   revision: 5,
-  fields: [
-    ...rev4.fields,
+  params: [
+    ...rev4.params,
     { key: 10, type: 'num', len: 3, name: 'systemType' },
     { key: 11, type: 'num', len: 3, name: 'systemSubtype' }
   ],
@@ -63,8 +63,8 @@ const rev5 = /** @type {const} */ ({
 const rev6 = /** @type {const} */ ({
   mid: 2,
   revision: 6,
-  fields: [
-    ...rev5.fields,
+  params: [
+    ...rev5.params,
     { key: 12, type: "num", len: 1, name: 'sequenceNumberSupport' },
     { key: 13, type: "num", len: 1, name: 'linkingHandlingSupport' },
     { key: 14, type: "num", len: 10, name: 'stationID' },
@@ -75,7 +75,7 @@ const rev6 = /** @type {const} */ ({
 
 /**
  * @template MRS
- * @typedef {import("../helpers").MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
+ * @typedef {import('../mid').MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
  */
 
 /**
@@ -89,7 +89,7 @@ const rev6 = /** @type {const} */ ({
  */
 
 /**
- * @param {import('../helpers').EncodedMID} msg 
+ * @param {import('../mid').EncodedMID} msg 
  * @param {any} opts
  * @param {(err: Error | null, msg?: MID0002) => void} cb 
  */
@@ -232,7 +232,7 @@ function parser(msg, opts, cb) {
 /**
  * @param {MID0002} msg 
  * @param {any} opts 
- * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
  */
 function serializer(msg, opts, cb) {
 

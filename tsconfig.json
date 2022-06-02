@@ -98,11 +98,19 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "allowJs": true,
-    "checkJs": true,
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src"
+    "index.js",
+    "src/mid.ts",
+    "src/helpers.js",
+    "src/mid/0002.js",
+    "src/mid/0004.js",
+    "src/mid/0005.js",
+    "src/mid/0018.js",
+    "src/mid/0050.js",
+    "src/mid/0061.js",
+    "src/mid/0106.js",
+    "src/mid/9999.js"
   ]
 }

@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 /*
   Copyright: (c) 2018-2020, Smart-Tech Controle e Automação
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -11,181 +11,180 @@ const serializerField = helpers.serializerField;
 const serializerKey = helpers.serializerKey;
 
 const rev1 = /** @type {const} */ ({
-    mid: 61,
-    revision: 1,
-    fields: [
-        { key: 1, type: 'num', len: 4, name: 'cellID' },
-        { key: 2, type: 'num', len: 2, name: 'channelID' },
-        { key: 3, type: 'str', len: 25, name: 'torqueControllerName' },
-        { key: 4, type: 'rawStr', len: 25, name: 'numberVIN' },
-        { key: 5, type: 'num', len: 2, name: 'jobID' },
-        { key: 6, type: 'num', len: 3, name: 'parameterSetID' },
-        { key: 7, type: 'num', len: 4, name: 'batchSize' },
-        { key: 8, type: 'num', len: 4, name: 'batchCounter' },
-        { key: 9, type: 'num', len: 1, name: 'tighteningStatus' },
-        { key: 10, type: 'num', len: 1, name: 'torqueStatus' },
-        { key: 11, type: 'num', len: 1, name: 'angleStatus' },
-        { key: 12, type: 'num', len: 6, name: 'torqueMinLimit' },
-        { key: 13, type: 'num', len: 6, name: 'torqueMaxLimit' },
-        { key: 14, type: 'num', len: 6, name: 'torqueFinalTarget' },
-        { key: 15, type: 'num', len: 6, name: 'torque' },
-        { key: 16, type: 'num', len: 5, name: 'angleMin' },
-        { key: 17, type: 'num', len: 5, name: 'angleMax' },
-        { key: 18, type: 'num', len: 5, name: 'finalAngleTarget' },
-        { key: 19, type: 'num', len: 5, name: 'angle' },
-        { key: 20, type: 'str', len: 19, name: 'timeStamp' },
-        { key: 21, type: 'str', len: 19, name: 'timeLastChange' },
-        { key: 22, type: 'num', len: 1, name: 'batchStatus' },
-        { key: 23, type: 'num', len: 10, name: 'tighteningID' },
-    ]
+  mid: 61,
+  revision: 1,
+  params: [
+    { key: 1, type: "num", len: 4, name: "cellID" },
+    { key: 2, type: "num", len: 2, name: "channelID" },
+    { key: 3, type: "str", len: 25, name: "torqueControllerName" },
+    { key: 4, type: "rawStr", len: 25, name: "numberVIN" },
+    { key: 5, type: "num", len: 2, name: "jobID" },
+    { key: 6, type: "num", len: 3, name: "parameterSetID" },
+    { key: 7, type: "num", len: 4, name: "batchSize" },
+    { key: 8, type: "num", len: 4, name: "batchCounter" },
+    { key: 9, type: "num", len: 1, name: "tighteningStatus" },
+    { key: 10, type: "num", len: 1, name: "torqueStatus" },
+    { key: 11, type: "num", len: 1, name: "angleStatus" },
+    { key: 12, type: "num", len: 6, name: "torqueMinLimit" },
+    { key: 13, type: "num", len: 6, name: "torqueMaxLimit" },
+    { key: 14, type: "num", len: 6, name: "torqueFinalTarget" },
+    { key: 15, type: "num", len: 6, name: "torque" },
+    { key: 16, type: "num", len: 5, name: "angleMin" },
+    { key: 17, type: "num", len: 5, name: "angleMax" },
+    { key: 18, type: "num", len: 5, name: "finalAngleTarget" },
+    { key: 19, type: "num", len: 5, name: "angle" },
+    { key: 20, type: "str", len: 19, name: "timeStamp" },
+    { key: 21, type: "str", len: 19, name: "timeLastChange" },
+    { key: 22, type: "num", len: 1, name: "batchStatus" },
+    { key: 23, type: "num", len: 10, name: "tighteningID" },
+  ],
 });
 
 const rev2 = /** @type {const} */ ({
-    mid: 61,
-    revision: 2,
-    fields: [
-        { key: 1, type: 'num', len: 4, name: 'cellID' },
-        { key: 2, type: 'num', len: 2, name: 'channelID' },
-        { key: 3, type: 'str', len: 25, name: 'torqueControllerName' },
-        { key: 4, type: 'rawStr', len: 25, name: 'numberVIN' },
-        { key: 5, type: 'num', len: 4, name: 'jobID' },
-        { key: 6, type: 'num', len: 3, name: 'parameterSetID' },
-        { key: 7, type: 'num', len: 2, name: 'strategy' },
-        { key: 8, type: 'num', len: 5, name: 'strategyOptions' },
-        { key: 9, type: 'num', len: 4, name: 'batchSize' },
-        { key: 10, type: 'num', len: 4, name: 'batchCounter' },
-        { key: 11, type: 'num', len: 1, name: 'tighteningStatus' },
-        { key: 12, type: 'num', len: 1, name: 'batchStatus' },
-        { key: 13, type: 'num', len: 1, name: 'torqueStatus' },
-        { key: 14, type: 'num', len: 1, name: 'angleStatus' },
-        { key: 15, type: 'num', len: 1, name: 'rundownAngleStatus' },
-        { key: 16, type: 'num', len: 1, name: 'currentMonitoringStatus' },
-        { key: 17, type: 'num', len: 1, name: 'selftapStatus' },
-        { key: 18, type: 'num', len: 1, name: 'prevailTorqueMonitoringStatus' },
-        { key: 19, type: 'num', len: 1, name: 'prevailTorqueCompensateStatus' },
-        { key: 20, type: 'num', len: 10, name: 'tighteningErrorStatus' },
-        { key: 21, type: 'num', len: 6, name: 'torqueMinLimit' },
-        { key: 22, type: 'num', len: 6, name: 'torqueMaxLimit' },
-        { key: 23, type: 'num', len: 6, name: 'torqueFinalTarget' },
-        { key: 24, type: 'num', len: 6, name: 'torque' },
-        { key: 25, type: 'num', len: 5, name: 'angleMin' },
-        { key: 26, type: 'num', len: 5, name: 'angleMax' },
-        { key: 27, type: 'num', len: 5, name: 'finalAngleTarget' },
-        { key: 28, type: 'num', len: 5, name: 'angle' },
-        { key: 29, type: 'num', len: 5, name: 'rundownAngleMin' },
-        { key: 30, type: 'num', len: 5, name: 'rundownAngleMax' },
-        { key: 31, type: 'num', len: 5, name: 'rundownAngle' },
-        { key: 32, type: 'num', len: 3, name: 'currentMonitoringMin' },
-        { key: 33, type: 'num', len: 3, name: 'currentMonitoringMax' },
-        { key: 34, type: 'num', len: 3, name: 'currentMonitoringValue' },
-        { key: 35, type: 'num', len: 6, name: 'selftapMin' },
-        { key: 36, type: 'num', len: 6, name: 'selftapMax' },
-        { key: 37, type: 'num', len: 6, name: 'selftapTorque' },
-        { key: 38, type: 'num', len: 6, name: 'prevailTorqueMonitoringMin' },
-        { key: 39, type: 'num', len: 6, name: 'prevailTorqueMonitoringMax' },
-        { key: 40, type: 'num', len: 6, name: 'prevailTorque' },
-        { key: 41, type: 'num', len: 10, name: 'tighteningID' },
-        { key: 42, type: 'num', len: 5, name: 'jobSequenceNumber' },
-        { key: 43, type: 'num', len: 5, name: 'syncTighteningID' },
-        { key: 44, type: 'str', len: 14, name: 'toolSerialNumber' },
-        { key: 45, type: 'str', len: 19, name: 'timeStamp' },
-        { key: 46, type: 'str', len: 19, name: 'timeLastChange' },
-    ],
+  mid: 61,
+  revision: 2,
+  params: [
+    { key: 1, type: "num", len: 4, name: "cellID" },
+    { key: 2, type: "num", len: 2, name: "channelID" },
+    { key: 3, type: "str", len: 25, name: "torqueControllerName" },
+    { key: 4, type: "rawStr", len: 25, name: "numberVIN" },
+    { key: 5, type: "num", len: 4, name: "jobID" },
+    { key: 6, type: "num", len: 3, name: "parameterSetID" },
+    { key: 7, type: "num", len: 2, name: "strategy" },
+    { key: 8, type: "num", len: 5, name: "strategyOptions" },
+    { key: 9, type: "num", len: 4, name: "batchSize" },
+    { key: 10, type: "num", len: 4, name: "batchCounter" },
+    { key: 11, type: "num", len: 1, name: "tighteningStatus" },
+    { key: 12, type: "num", len: 1, name: "batchStatus" },
+    { key: 13, type: "num", len: 1, name: "torqueStatus" },
+    { key: 14, type: "num", len: 1, name: "angleStatus" },
+    { key: 15, type: "num", len: 1, name: "rundownAngleStatus" },
+    { key: 16, type: "num", len: 1, name: "currentMonitoringStatus" },
+    { key: 17, type: "num", len: 1, name: "selftapStatus" },
+    { key: 18, type: "num", len: 1, name: "prevailTorqueMonitoringStatus" },
+    { key: 19, type: "num", len: 1, name: "prevailTorqueCompensateStatus" },
+    { key: 20, type: "num", len: 10, name: "tighteningErrorStatus" },
+    { key: 21, type: "num", len: 6, name: "torqueMinLimit" },
+    { key: 22, type: "num", len: 6, name: "torqueMaxLimit" },
+    { key: 23, type: "num", len: 6, name: "torqueFinalTarget" },
+    { key: 24, type: "num", len: 6, name: "torque" },
+    { key: 25, type: "num", len: 5, name: "angleMin" },
+    { key: 26, type: "num", len: 5, name: "angleMax" },
+    { key: 27, type: "num", len: 5, name: "finalAngleTarget" },
+    { key: 28, type: "num", len: 5, name: "angle" },
+    { key: 29, type: "num", len: 5, name: "rundownAngleMin" },
+    { key: 30, type: "num", len: 5, name: "rundownAngleMax" },
+    { key: 31, type: "num", len: 5, name: "rundownAngle" },
+    { key: 32, type: "num", len: 3, name: "currentMonitoringMin" },
+    { key: 33, type: "num", len: 3, name: "currentMonitoringMax" },
+    { key: 34, type: "num", len: 3, name: "currentMonitoringValue" },
+    { key: 35, type: "num", len: 6, name: "selftapMin" },
+    { key: 36, type: "num", len: 6, name: "selftapMax" },
+    { key: 37, type: "num", len: 6, name: "selftapTorque" },
+    { key: 38, type: "num", len: 6, name: "prevailTorqueMonitoringMin" },
+    { key: 39, type: "num", len: 6, name: "prevailTorqueMonitoringMax" },
+    { key: 40, type: "num", len: 6, name: "prevailTorque" },
+    { key: 41, type: "num", len: 10, name: "tighteningID" },
+    { key: 42, type: "num", len: 5, name: "jobSequenceNumber" },
+    { key: 43, type: "num", len: 5, name: "syncTighteningID" },
+    { key: 44, type: "str", len: 14, name: "toolSerialNumber" },
+    { key: 45, type: "str", len: 19, name: "timeStamp" },
+    { key: 46, type: "str", len: 19, name: "timeLastChange" },
+  ],
 });
 
 const rev3 = /** @type {const} */ ({
-    mid: 61,
-    revision: 3,
-    fields: [
-        ...rev2.fields,
-        { key: 47, type: 'str', len: 25, name: 'parameterSetName' },
-        { key: 48, type: 'num', len: 1, name: 'torqueValuesUnit' },
-        { key: 49, type: 'num', len: 2, name: 'resultType' },
-    ],
+  mid: 61,
+  revision: 3,
+  params: [
+    ...rev2.params,
+    { key: 47, type: "str", len: 25, name: "parameterSetName" },
+    { key: 48, type: "num", len: 1, name: "torqueValuesUnit" },
+    { key: 49, type: "num", len: 2, name: "resultType" },
+  ],
 });
 
 const rev4 = /** @type {const} */ ({
-    mid: 61,
-    revision: 4,
-    fields: [
-        ...rev3.fields,
-        { key: 50, type: 'str', len: 25, name: 'identifierPart2' },
-        { key: 51, type: 'str', len: 25, name: 'identifierPart3' },
-        { key: 52, type: 'str', len: 25, name: 'identifierPart4' },
-    ],
+  mid: 61,
+  revision: 4,
+  params: [
+    ...rev3.params,
+    { key: 50, type: "str", len: 25, name: "identifierPart2" },
+    { key: 51, type: "str", len: 25, name: "identifierPart3" },
+    { key: 52, type: "str", len: 25, name: "identifierPart4" },
+  ],
 });
 
-
 const rev5 = /** @type {const} */ ({
-    mid: 61,
-    revision: 5,
-    fields: [
-        ...rev4.fields,
-        { key: 53, type: 'string', len: 4, name: 'customerToghteningErrorCode' },
-    ],
+  mid: 61,
+  revision: 5,
+  params: [
+    ...rev4.params,
+    { key: 53, type: "string", len: 4, name: "customerToghteningErrorCode" },
+  ],
 });
 
 const rev6 = /** @type {const} */ ({
-    mid: 61,
-    revision: 6,
-    fields: [
-        ...rev5.fields,
-        { key: 54, type: 'num', len: 6, name: 'prevailTorqueCompensateValue' },
-        { key: 55, type: 'num', len: 10, name: 'tighteningErrorStatus2' },
-        { key: null, type: 'num', len: 0, name: '_tighteningErrorStatus2' },
-    ],
+  mid: 61,
+  revision: 6,
+  params: [
+    ...rev5.params,
+    { key: 54, type: "num", len: 6, name: "prevailTorqueCompensateValue" },
+    { key: 55, type: "num", len: 10, name: "tighteningErrorStatus2" },
+    { key: null, type: "num", len: 0, name: "_tighteningErrorStatus2" },
+  ],
 });
 
 const rev7 = /** @type {const} */ ({
-    mid: 61,
-    revision: 7,
-    fields: [
-        ...rev6.fields,
-        { key: 56, type: 'num', len: 7, name: 'compensatedAngle' },
-        { key: 57, type: 'num', len: 7, name: 'finalAngleDecimal' },
-    ],
+  mid: 61,
+  revision: 7,
+  params: [
+    ...rev6.params,
+    { key: 56, type: "num", len: 7, name: "compensatedAngle" },
+    { key: 57, type: "num", len: 7, name: "finalAngleDecimal" },
+  ],
 });
 
 const rev998 = /** @type {const} */ ({
-    mid: 61,
-    revision: 998,
-    fields: [
-        ...rev6.fields,
-        { key: 56, type: 'num', len: 2, name: 'numberStagesMultiStage' },
-        { key: 57, type: 'num', len: 2, name: 'numberStageResults' },
-        { key: 58, type: 'str', len: null, name: 'stageResult' },
-    ],
+  mid: 61,
+  revision: 998,
+  params: [
+    ...rev6.params,
+    { key: 56, type: "num", len: 2, name: "numberStagesMultiStage" },
+    { key: 57, type: "num", len: 2, name: "numberStageResults" },
+    { key: 58, type: "str", len: null, name: "stageResult" },
+  ],
 });
 
 const rev999 = /** @type {const} */ ({
-    mid: 61,
-    revision: 999,
-    fields: [
-        { key: 1, keyl: null, type: 'rawStr', len: 25, name: 'numberVIN' },
-        { key: 2, keyl: null, type: 'num', len: 2, name: 'jobID' },
-        { key: 3, keyl: null, type: 'num', len: 3, name: 'parameterSetID' },
-        { key: 4, keyl: null, type: 'num', len: 4, name: 'batchSize' },
-        { key: 5, keyl: null, type: 'num', len: 4, name: 'batchCounter' },
-        { key: 6, keyl: null, type: 'num', len: 1, name: 'batchStatus' },
-        { key: null, keyl: null, type: 'num', len: null, name: '_batchStatus' },
-        { key: 7, keyl: null, type: 'num', len: 1, name: 'tighteningStatus' },
-        { key: null, keyl: null, type: 'num', len: null, name: '_tighteningStatus' },
-        { key: 8, keyl: null, type: 'num', len: 1, name: 'torqueStatus' },
-        { key: null, keyl: null, type: 'num', len: null, name: '_torqueStatus' },
-        { key: 9, keyl: null, type: 'num', len: 1, name: 'angleStatus' },
-        { key: null, keyl: null, type: 'num', len: null, name: '_angleStatus' },
-        { key: 10, keyl: null, type: 'num', len: 6, name: 'torque' },
-        { key: 11, keyl: null, type: 'num', len: 5, name: 'angle' },
-        { key: 12, keyl: null, type: 'str', len: 19, name: 'timeStamp' },
-        { key: 13, keyl: null, type: 'str', len: 19, name: 'timeLastChange' },
-        { key: 14, keyl: null, type: 'num', len: 10, name: 'tighteningID' },
-    ]
+  mid: 61,
+  revision: 999,
+  params: [
+    { key: 1, keyl: null, type: "rawStr", len: 25, name: "numberVIN" },
+    { key: 2, keyl: null, type: "num", len: 2, name: "jobID" },
+    { key: 3, keyl: null, type: "num", len: 3, name: "parameterSetID" },
+    { key: 4, keyl: null, type: "num", len: 4, name: "batchSize" },
+    { key: 5, keyl: null, type: "num", len: 4, name: "batchCounter" },
+    { key: 6, keyl: null, type: "num", len: 1, name: "batchStatus" },
+    { key: null, keyl: null, type: "num", len: null, name: "_batchStatus" },
+    { key: 7, keyl: null, type: "num", len: 1, name: "tighteningStatus" },
+    { key: null, keyl: null, type: "num", len: null, name: "_tighteningStatus" },
+    { key: 8, keyl: null, type: "num", len: 1, name: "torqueStatus" },
+    { key: null, keyl: null, type: "num", len: null, name: "_torqueStatus" },
+    { key: 9, keyl: null, type: "num", len: 1, name: "angleStatus" },
+    { key: null, keyl: null, type: "num", len: null, name: "_angleStatus" },
+    { key: 10, keyl: null, type: "num", len: 6, name: "torque" },
+    { key: 11, keyl: null, type: "num", len: 5, name: "angle" },
+    { key: 12, keyl: null, type: "str", len: 19, name: "timeStamp" },
+    { key: 13, keyl: null, type: "str", len: 19, name: "timeLastChange" },
+    { key: 14, keyl: null, type: "num", len: 10, name: "tighteningID" },
+  ],
 });
 
 
 /**
  * @template MRS
- * @typedef {import("../helpers").MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
+ * @typedef {import('../mid').MidTypeFromStruct<MRS>} MidTypeFromStruct<MRS>
  */
 
 /**
@@ -204,7 +203,7 @@ const rev999 = /** @type {const} */ ({
 const constantsMID = require("./MidConstants/MID0061");
 
 /**
- * @param {import('../helpers').EncodedMID} msg 
+ * @param {import('../mid').EncodedMID} msg 
  * @param {any} opts
  * @param {(err: Error | null, msg?: MID0061) => void} cb 
  */
@@ -626,7 +625,7 @@ function parser(msg, opts, cb) {
 /**
  * @param {MID0061} msg 
  * @param {any} opts 
- * @param {(err: Error | null, msg?: import('../helpers').EncodedMID) => void} cb
+ * @param {(err: Error | null, msg?: import('../mid').EncodedMID) => void} cb
  */
 function serializer(msg, opts, cb) {
 
