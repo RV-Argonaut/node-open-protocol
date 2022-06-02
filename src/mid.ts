@@ -77,5 +77,5 @@ type MidParamTypeFromStruct<MSF extends MidStructParam | MidStructRepeatedParam>
         : MSF['type'] extends (readonly any[]) ? MSF['type'][number][]
         : MSF['type'] // get type directly
     : DeepWriteable<MSF> extends MidStructRepeatedParam ? {
-        [ repeatedParam in DeepWriteable<MSF>['params'][number]['name'] ]: MidParamTypeFromStruct<Extract<DeepWriteable<MSF>['params'][number], repeatedParam>>;
+        [ repeatedParam in DeepWriteable<MSF>['params'][number]['name'] ]: MidParamTypeFromStruct<Extract<DeepWriteable<MSF>['params'][number], { name: repeatedParam }>>;
     }[] : never;
