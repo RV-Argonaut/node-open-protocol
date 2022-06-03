@@ -246,7 +246,7 @@ class SessionControlClient extends EventEmitter {
 
         let midSend = {};
 
-        if (this.connected) {
+        if (this.isConnected()) {
             if (typeof cb === 'function') {
                 return process.nextTick(cb, this.controllerData);
             } else {
