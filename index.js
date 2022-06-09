@@ -4,12 +4,12 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 
-const OpenProtocolParser = require("./src/openProtocolParser.js");
-const OpenProtocalSerializer = require("./src/openProtocolSerializer.js");
-const MIDParser = require("./src/MIDParser.js");
-const MIDSerializer = require("./src/MIDSerializer.js");
-const helpers = require("./src/helpers.js");
-const SessionControlClient = require("./src/sessionControlClient.js");
+const OpenProtocolParser = require("./src/openProtocolParser");
+const OpenProtocalSerializer = require("./src/openProtocolSerializer");
+const MIDParser = require("./src/MIDParser");
+const MIDSerializer = require("./src/MIDSerializer");
+const helpers = require("./src/helpers");
+const { SessionControlClient } = require("./src/sessionControlClient");
 
 const midGroups = require("./src/midGroups");
 const midCommand = require("./src/midCommand");

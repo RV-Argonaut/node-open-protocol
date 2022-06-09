@@ -1,4 +1,5 @@
-//@ts-check
+// TODO remove nocheck
+//@ts-nocheck
 /*
   Copyright: (c) 2018-2020, Smart-Tech Controle e Automação
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -15,6 +16,7 @@ const constants = require("./constants");
 const midRequest = require("./midRequest");
 const midCommand = require("./midCommand");
 const midReply = require("./midReply");
+require('util').promisify
 
 const mids = helpers.getMids();
 
@@ -664,7 +666,7 @@ class SessionControlClient extends EventEmitter {
      *
      * @fires SessionControlClient#dataGroup
      *
-     * @param {String} midGroup
+     * @param {keyof import('./midGroups')} midGroup
      * @param {Object} [opts]
      * @param {Function} [cb]
      */
@@ -674,7 +676,7 @@ class SessionControlClient extends EventEmitter {
 
     /**
      * @private
-     * @param {*} midGroup
+     * @param {string} midGroup
      * @param {*} opts
      * @param {*} cb
      */
@@ -1173,4 +1175,4 @@ class Message {
 
 }
 
-module.exports = SessionControlClient;
+module.exports = { SessionControlClient };
