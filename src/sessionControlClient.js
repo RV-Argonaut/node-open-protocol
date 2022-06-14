@@ -58,6 +58,20 @@ function maybePromisify(ref, method, mid, opts, cb) {
     return ref[method](mid, opts, cb);
 }
 
+/**
+ * @typedef {object} SessionControlClientOpts
+ * @prop {object}  [SessionControlClientOpts.defaultRevisions = {}]
+ * @prop {boolean} [SessionControlClientOpts.linkLayerActivate] true = activate LinkLayer / false = not activate LinkLayer / undefined = autoNegotiation LinkLayer
+ * @prop {boolean} [SessionControlClientOpts.genericMode]  true activate / false or undefined not activate
+ * @prop {number}  [SessionControlClientOpts.keepAlive = 10000]
+ *
+ * @prop {stream}  SessionControlClientOpts.stream
+ * @prop {boolean} [SessionControlClientOpts.rawData]
+ * @prop {object}  [SessionControlClientOpts.disableMidParsing = {}]
+ * @prop {number}  [SessionControlClientOpts.timeOut = 3000]
+ * @prop {number}  [SessionControlClientOpts.retryTimes = 3]
+ */
+
 class SessionControlClient extends EventEmitter {
 
     /**
@@ -104,17 +118,7 @@ class SessionControlClient extends EventEmitter {
 
     /**
      * @throws {error}
-     * @param {*}       opts
-     * @param {object}  [opts.defaultRevisions = {}]
-     * @param {boolean} [opts.linkLayerActivate] true = activate LinkLayer / false = not activate LinkLayer / undefined = autoNegotiation LinkLayer
-     * @param {boolean} [opts.genericMode]  true activate / false or undefined not activate
-     * @param {number}  [opts.keepAlive = 10000]
-     *
-     * @param {stream}  opts.stream
-     * @param {boolean} [opts.rawData]
-     * @param {object}  [opts.disableMidParsing = {}]
-     * @param {number}  [opts.timeOut = 3000]
-     * @param {number}  [opts.retryTimes = 3]
+     * @param {SessionControlClientOpts} [opts]
      *
      * @example
      * // Instantiate SessionControlClient with default values
@@ -241,7 +245,7 @@ class SessionControlClient extends EventEmitter {
      * @description This method makes a connection with the controller.
      * If add a callback function, it will add as listener of connect @event.
      *
-     * @param {function} cb function of callback
+     * @param {(controllerData: import("./mid/0002.js").MID0002) => void} [cb] function of callback
      */
     connect(cb) {
         debug("SessionControlClient connect");
