@@ -53,5 +53,8 @@
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
     "typescript": "^4.7.2"
+  },
+  "publishConfig": {
+    "@redviking:registry": "https://gitlab.com/api/v4/projects/36999202/packages/npm/"
   }
 }
