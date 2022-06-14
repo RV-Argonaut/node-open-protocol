@@ -1,0 +1,48 @@
+include:
+  - project: redviking/templates/ci-templates
+    ref: master
+    file: modular.gitlab-ci.yaml
+  - project: redviking/templates/ci-templates
+    ref: yarn-cache
+    file: modular/yarn-cache.gitlab-ci.yaml
+
+
+default:
+  image: node:16-alpine
+  tags:
+    - civ3
+
+stages:
+  - build
+  - deploy
+  - cleanup
+
+build:
+  stage: build
+  before_script:
+    - eval "$CI_UTIL_INIT"
+    - eval "$MODULAR_YARN_CACHE"
+    - yarn --immutable
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - typings
+    expire_in: 30 days
+
+deploy:
+  stage: deploy
+  when: manual
+  before_script:
+    - eval "$CI_UTIL_INIT"
+  script:
+    - export PKG_VERSION="$(node -p "require('./package.json').version")-$CI_COMMIT_SHORT_SHA"
+    - npm version "$PKG_VERSION" --no-git-tag-version
+    - npm publish
+
+slack-notify-pass:
+  extends: .modular-slack-pass
+  stage: cleanup
+slack-notify-fail:
+  extends: .modular-slack-fail
+  stage: cleanup
