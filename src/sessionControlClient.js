@@ -1122,9 +1122,10 @@ class SessionControlClient extends EventEmitter {
             this.midInProcess.doCallback(err);
         }
 
-        this._sendKeepAlive();
         this.inOperation = false;
-        this._sendingProcess();
+
+        // if a serialization error happened, then the streams are destroyed and no longer usable
+        this.close(err);
     }
 
 }

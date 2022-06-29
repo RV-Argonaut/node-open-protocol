@@ -20,15 +20,16 @@ class MIDSerializer extends Transform {
      * This transforms MID.payload (object) in MID.payload (Buffer).
      * This class uses the implemented MIDs in 'node-open-protocol/src/mid' for serializing MIDs.
      * In case of not a implemented MID, MID.payload (String | Buffer) is converted in a Buffer.
-     * @param {any} opts parameters to Transform stream
+     * @param {Omit<import('stream').TransformOptions, 'writableObjectMode' | 'readableObjectMode'>} opts parameters to Transform stream
      */
-    constructor(opts) {
+    constructor(opts = {}) {
         debug("new MIDSerializer");
 
-        opts = opts || {};
-        opts.writableObjectMode = true;
-        opts.readableObjectMode = true;
-        super(opts);
+        super({
+          ...opts,
+          writableObjectMode: true,
+          readableObjectMode: true,
+        });
     }
 
     /**
@@ -42,19 +43,21 @@ class MIDSerializer extends Transform {
         debug("MIDSerializer _transform", chunk);
 
         if(mids[chunk.mid]){
-            
-            mids[chunk.mid].serializer(chunk, null, (err, data) => {
-                
-                if(err){
-                    cb(new Error(`Error on serializer [${err}]`));
-                    debug('MIDSerializer _transform err-serializer', chunk, err);
-                    return;
-                }
-
-                this.push(data);
-                cb();                
-            });
-            
+            try {
+                mids[chunk.mid].serializer(chunk, null, (err, data) => {
+                    if(err){
+                        cb(new Error(`Error on serializer [${err}]`));
+                        debug('MIDSerializer _transform err-serializer', chunk, err);
+                        return;
+                    }
+    
+                    this.push(data);
+                    cb();
+                });
+            } catch (err) {
+                cb(new Error(`Unexpected error on serializer [${err}]`));
+                debug('MIDSerializer _transform err-serializer', chunk, err);
+            }
         }else{
 
             if(chunk.payload === undefined){
