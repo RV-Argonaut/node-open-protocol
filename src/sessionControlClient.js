@@ -102,13 +102,13 @@ class SessionControlClient extends EventEmitter {
 
     /**
      * @throws {error}
-     * @param {*}       opts
+     * @param {object}       opts
      * @param {object}  [opts.defaultRevisions = {}]
      * @param {boolean} [opts.linkLayerActivate] true = activate LinkLayer / false = not activate LinkLayer / undefined = autoNegotiation LinkLayer
      * @param {boolean} [opts.genericMode]  true activate / false or undefined not activate
      * @param {number}  [opts.keepAlive = 10000]
      *
-     * @param {stream}  opts.stream
+     * @param {import('net').Socket}  opts.stream
      * @param {boolean} [opts.rawData]
      * @param {object}  [opts.disableMidParsing = {}]
      * @param {number}  [opts.timeOut = 3000]
@@ -1116,9 +1116,10 @@ class SessionControlClient extends EventEmitter {
             this.midInProcess.doCallback(err);
         }
 
-        this._sendKeepAlive();
         this.inOperation = false;
-        this._sendingProcess();
+
+        // if a serialization error happened, then the streams are destroyed and no longer usable
+        this.close(err);
     }
 
 }
