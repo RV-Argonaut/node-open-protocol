@@ -134,7 +134,7 @@ const rev5 = /** @type {const} */ ({
     revision: 5,
     params: [
         ...rev4.params,
-        { key: 53, type: "string", len: 4, name: "customerToghteningErrorCode" }, // typo?
+        { key: 53, type: "str", len: 4, name: "customerToghteningErrorCode" }, // typo?
     ],
 });
 
@@ -286,7 +286,7 @@ function parser(msg, opts, cb) {
             parsedMid.payload.strategy = constantsMID["strategy"][/** @type {keyof typeof constantsMID['strategy']} */ (parsedMid.payload._strategy.toString())];
         }
         if ('_strategyOptions' in parsedMid.payload) {
-            parsedMid.payload.strategyOptions = checkBitMap("strategyOptions", parsedMid.payload._strategyOptions, 10); // TODO original had 11, looks like a mistake
+            parsedMid.payload.strategyOptions = checkBitMap("strategyOptions", parsedMid.payload._strategyOptions, 11);
         }
         if ('_tighteningErrorStatus' in parsedMid.payload) {
             parsedMid.payload.tighteningErrorStatus = checkBitMap("tighteningErrorStatus", parsedMid.payload._tighteningErrorStatus, 32);
@@ -332,8 +332,8 @@ function serializer(msg, opts, cb) {
     try {
         if (msg.revision === 7) {
             // these are only present on rev 7
-            msg.payload.compensatedAngle /= Math.trunc(msg.payload.compensatedAngle * 100);
-            msg.payload.finalAngleDecimal /= Math.trunc(msg.payload.finalAngleDecimal * 100);
+            msg.payload.compensatedAngle = Math.trunc(msg.payload.compensatedAngle * 100);
+            msg.payload.finalAngleDecimal = Math.trunc(msg.payload.finalAngleDecimal * 100);
         }
 
         if ('angleStatus' in msg.payload) {
