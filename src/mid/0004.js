@@ -10,8 +10,8 @@ const rev1 = /** @type {const} */ ({
     mid: 4,
     revision: 1,
     params: [
-        { key: 1, type: 'num', len: 2, keyl: null, name: 'errorCode' },
-        { key: 2, type: 'num', len: 4, keyl: null, name: 'midNumber' },
+        { key: 1, type: 'num', len: 4, keyl: null, name: 'midNumber' },
+        { key: 2, type: 'num', len: 2, keyl: null, name: 'errorCode' },
     ],
 });
 
