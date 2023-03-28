@@ -362,6 +362,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^16":
+  version: 16.18.21
+  resolution: "@types/node@npm:16.18.21"
+  checksum: 152e7976f30b4e599d37e5a92a0c62dbe0751a63dab1aef44a0c2db940fa6f79a23be9783886b6afe34aa20485679c6bdd7b787b304fdbb05e72326c95d2b255
+  languageName: node
+  linkType: hard
+
 "@ungap/promise-all-settled@npm:1.1.2":
   version: 1.1.2
   resolution: "@ungap/promise-all-settled@npm:1.1.2"
@@ -1946,6 +1953,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "node-open-protocol@workspace:."
   dependencies:
+    "@types/node": ^16
     chai: ^4.2.0
     jsdoc: ^3.6.6
     mocha: ^8.2.0

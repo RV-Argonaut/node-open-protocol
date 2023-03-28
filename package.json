@@ -43,6 +43,7 @@
   "author": "SmartTech",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@types/node": "^16",
     "chai": "^4.2.0",
     "jsdoc": "^3.6.6",
     "mocha": "^8.2.0",
