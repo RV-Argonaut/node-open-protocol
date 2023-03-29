@@ -362,7 +362,7 @@ class LinkLayer extends Duplex {
         }
     }
 
-    _destroy() {
+    _destroy(err, callback) {
         debug("LinkLayer _destroy");
 
         clearTimeout(this.timer);
@@ -380,6 +380,8 @@ class LinkLayer extends Duplex {
         destroyStream(this.opSerializer);
         destroyStream(this.midParser);
         destroyStream(this.midSerializer);
+
+        callback(err);
     }
 
     finishCycle(err) {
