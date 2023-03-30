@@ -6,6 +6,21 @@ This node was created by [Smart-Tech](https://netsmarttech.com) as part of the [
 
 Documentation: [Open Protocol R 2.8.0](docs/OpenProtocolSpecification_R280.pdf)
 
+## ⚠ RedViking Fork
+
+This fork adds fixes and enhancements to the source project which have been made by RedViking's Argonaut team. The upstream project appears to be unmaintained. If the upstream ends up reviewing and merging the changes provided in this fork, then this fork would become unnecessary. Until that happens, our planned process for transparency is making changes to the project and keeping the ability to merge upstream viable:
+
+- create an `upstream-master` branch to match the upstream project's master branch
+- changes from RedViking will be implemented on feature branches in this project
+- changes we'd like merged upstream will be based off the `upstream-master` branch
+- other changes will just base off of our `develop` branch, we'll ignore how we handle those in this outline
+- for changes we'd like merged upstream, we will create an issue/PR on the upstream project, to merge into its `develop` branch
+- create our own PR in this fork project, but reference it in the upstream project's issue/PR so other devs on github will see the implemented fix
+- we have a mirror for this repo on gitlab, which will keep our internal repo in sync with the public one
+- to keep things simple for us in the short term, our internal gitlab CI will publish the package to our package registry. If there's public interest in our fork, we could explore transitioning to publishing to npm instead
+
+> note: This plan should be considered as guidelines more than anything. We are open to discussions on how we might change it.
+
 ## What is Open Protocol?
 
 Open Protocol is an interface for building applications for remote control or data subscription of industrial tightening 

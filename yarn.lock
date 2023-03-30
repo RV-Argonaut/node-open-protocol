@@ -331,6 +331,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@redviking/node-open-protocol@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@redviking/node-open-protocol@workspace:."
+  dependencies:
+    "@types/node": ^16
+    chai: ^4.2.0
+    jsdoc: ^3.6.6
+    mocha: ^8.2.0
+    nyc: ^15.1.0
+    typescript: ^4.7.2
+  languageName: unknown
+  linkType: soft
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -1948,19 +1961,6 @@ __metadata:
   checksum: 4d8ef8860f7e4f4d86c91db3f519d26ed5cc23b48fe54543e2afd86162b4acbd14f21de42a5db344525efb69a991e021b96a68c70c6e2d5f4a5cb770793da6d3
   languageName: node
   linkType: hard
-
-"node-open-protocol@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "node-open-protocol@workspace:."
-  dependencies:
-    "@types/node": ^16
-    chai: ^4.2.0
-    jsdoc: ^3.6.6
-    mocha: ^8.2.0
-    nyc: ^15.1.0
-    typescript: ^4.7.2
-  languageName: unknown
-  linkType: soft
 
 "node-preload@npm:^0.2.1":
   version: 0.2.1
