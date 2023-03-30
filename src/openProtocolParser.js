@@ -7,7 +7,7 @@
 const util = require('util');
 const { Transform } = require('stream');
 
-const constants = require("./constants.json");
+const constants = require("./constants");
 
 const encodingOP = constants.defaultEncoder;
 
@@ -19,14 +19,17 @@ class OpenProtocolParser extends Transform {
      * @class OpenProtocolParser
      * @description This class performs the parsing of the MID header.
      * This transforms MID (Buffer) in MID (Object).
-     * @param {Object} opts an object with the option passed to the constructor
+     * @param {Partial<Omit<import('stream').TransformOptions, 'readableObjectMode' | 'decodeStrings'> & {
+     *  rawData?: boolean
+     * }>} opts an object with the option passed to the constructor
      */
-    constructor(opts) {
-        opts = opts || {};
-        opts.readableObjectMode = true;
-        opts.decodeStrings = true;
+    constructor(opts = {}) {
 
-        super(opts);
+        super({
+          ...opts,
+          decodeStrings: true,
+          readableObjectMode: true,
+        });
 
         this.rawData = opts.rawData || false;
         this._nBuffer = null;
@@ -236,10 +239,6 @@ class OpenProtocolParser extends Transform {
             this.push(obj);
         }
         cb();
-    }
-
-    _destroy() {
-        //no-op, needed to handle older node versions
     }
 }
 

@@ -1,15 +1,31 @@
 {
-  "name": "node-open-protocol",
-  "version": "1.1.1",
-  "description": "A library to interface with Power Tools using the Atlas Copco Open Protocol",
+  "name": "@redviking/node-open-protocol",
+  "version": "1.2.0",
+  "description": "A library to interface with Power Tools using the Atlas Copco Open Protocol (RedViking fork)",
   "main": "index.js",
   "directories": {
     "doc": "doc"
   },
   "scripts": {
+    "build": "tsc",
     "test": "nyc --reporter=html --reporter=text --reporter=text-summary mocha --timeout=3000 test/**/**.spec.js",
-    "doc": "jsdoc -d docs/jsdoc/ -r -R README.md src/"
+    "doc": "jsdoc -d docs/jsdoc/ -r -R README.md src/",
+    "prepack": "tsc"
   },
+  "typesVersions": {
+    "*": {
+      "typings/*": [
+        "typings/*"
+      ],
+      "*": [
+        "typings/*"
+      ]
+    }
+  },
+  "files": [
+    "src",
+    "typings"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/netsmarttech/node-open-protocol"
@@ -31,9 +47,11 @@
   "author": "SmartTech",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@types/node": "^16",
     "chai": "^4.2.0",
     "jsdoc": "^3.6.6",
     "mocha": "^8.2.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "typescript": "^4.7.2"
   }
 }
