@@ -564,12 +564,12 @@ function parseParams (msg, payload, startPos, structs) {
                 } else if (struct.type === 'rawStr') {
                     payload[struct.name] = msg.payload.toString(encoding, position, position + len);
                     if (payload[struct.name].length !== len) {
-                        new Error(`invalid length, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${payload}`)
+                        throw new Error(`invalid length, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${payload}`)
                     }
                 } else if (struct.type === 'num') {
                     payload[struct.name] = Number(msg.payload.toString(encoding, position, position + len));
                     if (isNaN(payload[struct.name])) {
-                        new Error(`invalid value, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${JSON.stringify(payload)}`)
+                        throw new Error(`invalid value, mid: ${msg.mid}, parameter: ${struct.name}, payload: ${JSON.stringify(payload)}`)
                     }
                 }
         
