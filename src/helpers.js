@@ -594,7 +594,7 @@ function parseParams (msg, payload, startPos, structs) {
  * @returns {MidTypeFromStruct<REVS[number]>}
  */
 function parse (msg, revisions) {
-    const rev = revisions.find(r => r.revision === msg.revision);
+    const rev = revisions.find(r => r.revision === (msg.revision || 1));
     if (!rev) {
         throw new Error(`[Parser MID${msg.mid}] invalid revision [${msg.revision}]`)
     }
@@ -706,7 +706,7 @@ function serializeParams (payload, structs) {
  * @returns {Buffer}
  */
 function serialize (msg, revisions) {
-    const rev = revisions.find(r => r.revision === msg.revision);
+    const rev = revisions.find(r => r.revision === (msg.revision || 1));
     if (!rev) {
         throw new Error(`[Serializer MID${msg.mid}] invalid revision [${msg.revision}]`);
     }
