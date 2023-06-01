@@ -22,14 +22,16 @@ describe("Open Protocol Parser", () => {
         expect(new OpenProtocolParser).to.be.instanceOf(Stream);
     });
 
-    it('should emit an error when input is not a buffer', (done) => {
+    it('should throw an error when input is not a buffer', (done) => {
         let parser = new OpenProtocolParser();
-        parser.on('error', (err) => {
+
+        // this test used to listen for an error event for some reason, but passing an invalid input to the parser will throw an error instead of emitting an error event
+        try {
+            parser.write({});
+        } catch (err) {
             expect(err).to.be.an('error');
             done();
-        });
-
-        parser.write({});
+        }
     });
 
     it('should parse normally when the input is a string', (done) => {

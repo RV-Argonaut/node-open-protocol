@@ -121,11 +121,8 @@ class LinkLayer extends Duplex {
         }
 
         if (this.callbackWrite) {
-            function doCallback(cb) {
-                process.nextTick(() => cb());
-            }
-
-            doCallback(this.callbackWrite);
+            const cb = this.callbackWrite;
+            process.nextTick(() => cb());
 
             this.callbackWrite = undefined;
         }
@@ -366,7 +363,7 @@ class LinkLayer extends Duplex {
         }
     }
 
-    _destroy() {
+    _destroy(err, callback) {
         debug("LinkLayer _destroy");
 
         clearTimeout(this.timer);
@@ -384,6 +381,8 @@ class LinkLayer extends Duplex {
         destroyStream(this.opSerializer);
         destroyStream(this.midParser);
         destroyStream(this.midSerializer);
+
+        callback(err);
     }
 
     finishCycle(err) {
@@ -430,12 +429,8 @@ class LinkLayer extends Duplex {
                 ` Expect MID[${this.message.mid}] - Expect SequenceNumber [${this.sequenceNumber}] - Current SequenceNumber [${data.sequenceNumber}]`);
 
             if (this.callbackWrite) {
-
-                function doCallback(cb, err) {
-                    process.nextTick(() => cb(err));
-                }
-
-                doCallback(this.callbackWrite, err);
+                const cb = this.callbackWrite;
+                process.nextTick(() => cb(err));
 
                 this.callbackWrite = undefined;
 
@@ -450,12 +445,8 @@ class LinkLayer extends Duplex {
         this.message = {};
 
         if (this.callbackWrite) {
-
-            function doCallback(cb) {
-                process.nextTick(() => cb());
-            }
-
-            doCallback(this.callbackWrite);
+            const callbackWrite = this.callbackWrite;
+            process.nextTick(() => callbackWrite());
 
             this.callbackWrite = undefined;
         }
@@ -503,15 +494,10 @@ class LinkLayer extends Duplex {
             this.resentTimes = 0;
 
             if (this.callbackWrite) {
-
-                function doCallback(cb, err) {
-                    process.nextTick(() => cb(err));
-                }
-
-                doCallback(this.callbackWrite, err);
+                const cb = this.callbackWrite;
+                process.nextTick(() => cb(err));
 
                 this.callbackWrite = undefined;
-
             } else {
                 debug('LinkLayer _resendMid  err-timeout_send_MID', this.message.mid);
                 this.emit("error", err);

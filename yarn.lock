@@ -288,7 +288,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redviking/node-open-protocol@workspace:."
   dependencies:
-    "@types/node": ^17.0.35
+    "@types/node": ^16
     chai: ^4.2.0
     jsdoc: ^3.6.6
     mocha: ^8.2.0
@@ -328,10 +328,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.35":
-  version: 17.0.41
-  resolution: "@types/node@npm:17.0.41"
-  checksum: ddaf9e7decb487850a9bbfeb670b41c9d35c5b1597c4c4f889419b65042d776e9041ed533c7afc1bac30cad1e9dcfd984085b4a35312efe8ea5eaf0bd36a8191
+"@types/node@npm:^16":
+  version: 16.18.21
+  resolution: "@types/node@npm:16.18.21"
+  checksum: 152e7976f30b4e599d37e5a92a0c62dbe0751a63dab1aef44a0c2db940fa6f79a23be9783886b6afe34aa20485679c6bdd7b787b304fdbb05e72326c95d2b255
   languageName: node
   linkType: hard
 
