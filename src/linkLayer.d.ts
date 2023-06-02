@@ -12,4 +12,5 @@ export type LinkLayerOpts = DuplexOptions & {
 
 export = class LinkLayer extends Duplex {
   constructor (opts: LinkLayerOpts);
+  deactivateLinkLayer(): void;
 }

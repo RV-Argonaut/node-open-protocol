@@ -16,7 +16,11 @@ const constants = require("./constants");
 const midRequest = require("./midRequest");
 const midCommand = require("./midCommand");
 const midReply = require("./midReply");
-require('util').promisify
+
+/** @typedef {import('./mid').MidCommandMap} MidCommandMap */
+/** @typedef {import('./mid').MidDataMap} MidDataMap */
+/** @typedef {import('./mid').MID} MID */
+/** @typedef {import('./mid/0002.js').MID0002} MID0002 */
 
 const mids = helpers.getMids();
 
@@ -60,13 +64,13 @@ function maybePromisify(ref, method, mid, opts, cb) {
 
 /**
  * @typedef {object} SessionControlClientOpts
- * @prop {object}  [SessionControlClientOpts.defaultRevisions = {}]
- * @prop {boolean} [SessionControlClientOpts.linkLayerActivate] true = activate LinkLayer / false = not activate LinkLayer / undefined = autoNegotiation LinkLayer
- * @prop {boolean} [SessionControlClientOpts.genericMode]  true activate / false or undefined not activate
+ * @prop {object}  [SessionControlClientOpts.defaultRevisions = {}] keyed by mid number
+ * @prop {boolean} [SessionControlClientOpts.linkLayerActivate = true] true = activate LinkLayer / false = not activate LinkLayer / undefined = autoNegotiation LinkLayer
+ * @prop {boolean} [SessionControlClientOpts.genericMode = true]  true activate / false or undefined not activate
  * @prop {number}  [SessionControlClientOpts.keepAlive = 10000]
  *
  * @prop {stream}  SessionControlClientOpts.stream
- * @prop {boolean} [SessionControlClientOpts.rawData]
+ * @prop {boolean} [SessionControlClientOpts.rawData = false]
  * @prop {object}  [SessionControlClientOpts.disableMidParsing = {}]
  * @prop {number}  [SessionControlClientOpts.timeOut = 3000]
  * @prop {number}  [SessionControlClientOpts.retryTimes = 3]
@@ -609,13 +613,26 @@ class SessionControlClient extends EventEmitter {
     }
 
     /**
+     * @overload
+     * @param {CMD} midGroup
+     * @param {MidCommandMap[CMD]} [opts]
+     * @param {Function} [cb]
+     * @template {keyof MidCommandMap} CMD
+    */
+   /**
+     * @overload
+     * @param {string} midGroup
+     * @param {MID} [opts]
+     * @param {Function} [cb]
+     */
+    /**
      * @description This method makes a command call, it uses [midGroup] as key for call.
      * If adding only [midGroup] the message will have a default body, for additional body settings,
      * add the [opts] object. The [cb] function is called in case of an error, sending the error as
      * parameter and in success cases sending the MID of reply.
      *
-     * @param {String} midGroup
-     * @param {Object} [opts]
+     * @param {string} midGroup
+     * @param {MID} [opts]
      * @param {Function} [cb]
      */
     command(midGroup, opts, cb) {
@@ -1142,6 +1159,40 @@ class SessionControlClient extends EventEmitter {
         this.close(err);
     }
 
+    /**
+     * @overload
+     * @param {'connect'} event
+     * @param {(data: MID0002) => void} listener
+     */
+    /**
+     * @overload
+     * @param {'error'} event
+     * @param {(err: Error) => void} listener
+     */
+    /**
+     * @overload
+     * @param {'close'} event
+     * @param {(err: Error) => void} listener
+     */
+    /**
+     * @overload
+     * @param {'data'} event
+     * @param {(data: MID) => void} listener
+     */
+    /**
+     * typed midData
+     * @overload
+     * @param {MID_NAME} event
+     * @param {(data: MidDataMap[MID_NAME]) => void} listener
+     * @template {keyof import('./mid').MidDataMap} MID_NAME
+     */
+    /**
+     * @param {string} event 
+     * @param {function} listener 
+     */
+    on(event, listener) {
+        super.on(event, listener);
+    }
 }
 
 class Message {

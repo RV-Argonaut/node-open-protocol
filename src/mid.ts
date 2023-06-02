@@ -1,4 +1,11 @@
 import { DeepWriteable } from "./helpers";
+import type { MID0035 } from './mid/0035';
+import type { MID0018 } from './mid/0018';
+import type { MID0019 } from './mid/0019';
+import type { MID0038 } from './mid/0038';
+import type { MID0050 } from './mid/0050';
+import type { MID0061 } from './mid/0061';
+import type { MID0106 } from './mid/0106';
 
 /** generic type for a MID, which has an unknown payload (payload type to be extended by other MIDs) */
 export type MID = {
@@ -79,3 +86,18 @@ type MidParamTypeFromStruct<MSF extends MidStructParam | MidStructRepeatedParam>
     : DeepWriteable<MSF> extends MidStructRepeatedParam ? {
         [ repeatedParam in DeepWriteable<MSF>['params'][number]['name'] ]: MidParamTypeFromStruct<Extract<DeepWriteable<MSF>['params'][number], { name: repeatedParam }>>;
     }[] : never;
+
+export type MidCommandMap = {
+    selectPset: MID0018;
+    setPsetBatchSize: MID0019;
+    selectJob: MID0038;
+    vinDownload: MID0050;
+};
+
+export type MidDataMap = {
+    jobInfo: MID0035;
+    lastTightening: MID0061;
+    lastPowerMACSTighteningResultStationData: MID0106;
+}
+
+export type MidMap = MidCommandMap & MidDataMap;
